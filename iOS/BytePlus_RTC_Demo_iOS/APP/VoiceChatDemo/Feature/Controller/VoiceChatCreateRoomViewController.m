@@ -47,25 +47,25 @@
 }
 
 - (void)joinButtonAction:(UIButton *)sender {
-    [[ToastComponents shareToastComponents] showLoading];
+    [[ToastComponent shareToastComponent] showLoading];
     sender.userInteractionEnabled = NO;
     __weak __typeof(self) wself = self;
     [VoiceChatRTMManager startLive:self.roomNameLabel.text
-                                 userName:[LocalUserComponents userModel].name
+                                 userName:[LocalUserComponent userModel].name
                               bgImageName:_bgImageName
                                     block:^(NSString * _Nonnull RTCToken,
                                             VoiceChatRoomModel * _Nonnull roomModel,
                                             VoiceChatUserModel * _Nonnull hostUserModel,
                                             RTMACKModel * _Nonnull model) {
         if (model.result) {
-            [[ToastComponents shareToastComponents] dismiss];
+            [[ToastComponent shareToastComponent] dismiss];
             VoiceChatRoomViewController *next = [[VoiceChatRoomViewController alloc]
                                                  initWithRoomModel:roomModel
                                                  rtcToken:RTCToken
                                                  hostUserModel:hostUserModel];
             [wself.navigationController pushViewController:next animated:YES];
         } else {
-            [[ToastComponents shareToastComponents] showWithMessage:model.message];
+            [[ToastComponent shareToastComponent] showWithMessage:model.message];
         }
         sender.userInteractionEnabled = YES;
     }];
@@ -154,7 +154,7 @@
         _roomNameLabel = [[UILabel alloc] init];
         _roomNameLabel.font = [UIFont systemFontOfSize:14];
         _roomNameLabel.textColor = [UIColor colorFromHexString:@"#FFFFFF"];
-        _roomNameLabel.text = [NSString stringWithFormat:LocalizedString(@"%@'s room"), [LocalUserComponents userModel].name];
+        _roomNameLabel.text = [NSString stringWithFormat:LocalizedString(@"%@'s room"), [LocalUserComponent userModel].name];
     }
     return _roomNameLabel;
 }

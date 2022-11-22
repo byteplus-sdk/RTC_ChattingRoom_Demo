@@ -71,7 +71,7 @@
                                               mic:isEnable ? 1 : 0
                                             block:^(RTMACKModel * _Nonnull model) {
         if (!model.result) {
-            [[ToastComponents shareToastComponents] showWithMessage:LocalizedString(@"Please try again")];
+            [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"Please try again")];
         }
     }];
 }

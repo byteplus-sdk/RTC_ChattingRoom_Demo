@@ -10,7 +10,7 @@
 @interface VoiceChatRoomTableView () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *roomTableView;
-@property (nonatomic, strong) VoiceChatEmptyView *emptyCompoments;
+@property (nonatomic, strong) VoiceChatEmptyView *emptyComponent;
 
 @end
 
@@ -36,9 +36,9 @@
     
     [self.roomTableView reloadData];
     if (dataLists.count <= 0) {
-        [self.emptyCompoments show];
+        [self.emptyComponent show];
     } else {
-        [self.emptyCompoments dismiss];
+        [self.emptyComponent dismiss];
     }
 }
 
@@ -82,12 +82,12 @@
     return _roomTableView;
 }
 
-- (VoiceChatEmptyView *)emptyCompoments {
-    if (!_emptyCompoments) {
-        _emptyCompoments = [[VoiceChatEmptyView alloc] initWithView:self
+- (VoiceChatEmptyView *)emptyComponent {
+    if (!_emptyComponent) {
+        _emptyComponent = [[VoiceChatEmptyView alloc] initWithView:self
                                                                   message:LocalizedString(@"No one has created a voice chat room. Create one.")];
     }
-    return _emptyCompoments;
+    return _emptyComponent;
 }
 
 @end

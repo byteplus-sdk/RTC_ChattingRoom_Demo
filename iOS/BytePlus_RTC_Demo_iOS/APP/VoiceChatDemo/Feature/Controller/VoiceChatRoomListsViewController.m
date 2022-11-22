@@ -71,7 +71,7 @@
                 wself.roomTableView.dataLists = roomList;
             } else {
                 wself.roomTableView.dataLists = @[];
-                [[ToastComponents shareToastComponents] showWithMessage:model.message];
+                [[ToastComponent shareToastComponent] showWithMessage:model.message];
             }
         }];
     }];
@@ -123,7 +123,7 @@
 
 - (void)dealloc {
     [[VoiceChatRTCManager shareRtc] disconnect];
-    [PublicParameterCompoments clear];
+    [PublicParameterComponent clear];
 }
 
 

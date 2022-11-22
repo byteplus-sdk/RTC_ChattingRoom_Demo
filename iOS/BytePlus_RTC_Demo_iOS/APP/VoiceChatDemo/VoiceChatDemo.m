@@ -4,6 +4,7 @@
  */
 
 #import "VoiceChatDemo.h"
+#import "JoinRTSParams.h"
 #import "VoiceChatRoomListsViewController.h"
 #import <Core/NetworkReachabilityManager.h>
 #import <Core/Localizator.h>
@@ -11,18 +12,41 @@
 @implementation VoiceChatDemo
 
 - (void)pushDemoViewControllerBlock:(void (^)(BOOL result))block {
-    [[ToastComponents shareToastComponents] showLoading];
+    [[ToastComponent shareToastComponent] showLoading];
     [VoiceChatRTCManager shareRtc].networkDelegate = [NetworkReachabilityManager sharedManager];
-    [[VoiceChatRTCManager shareRtc] connect:@"svc"
-                                 loginToken:[LocalUserComponents userModel].loginToken
+    JoinRTSInputModel *inputModel = [[JoinRTSInputModel alloc] init];
+    inputModel.scenesName = @"svc";
+    inputModel.loginToken = [LocalUserComponent userModel].loginToken;
+    __weak __typeof(self) wself = self;
+    [JoinRTSParams getJoinRTSParams:inputModel
+                             block:^(JoinRTSParamsModel * _Nonnull model) {
+        [wself joinRTS:model block:block];
+    }];
+}
+
+- (void)joinRTS:(JoinRTSParamsModel * _Nonnull)model
+          block:(void (^)(BOOL result))block{
+    if (!model) {
+        [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"Connection failed")];
+        if (block) {
+            block(NO);
+        }
+        return;
+    }
+    // Connect RTS
+    [[VoiceChatRTCManager shareRtc] connect:model.appId
+                                   RTSToken:model.RTSToken
+                                  serverUrl:model.serverUrl
+                                  serverSig:model.serverSignature
+                                        bid:model.bid
                                       block:^(BOOL result) {
         if (result) {
-            [[ToastComponents shareToastComponents] dismiss];
+            [[ToastComponent shareToastComponent] dismiss];
             VoiceChatRoomListsViewController *next = [[VoiceChatRoomListsViewController alloc] init];
             UIViewController *topVC = [DeviceInforTool topViewController];
             [topVC.navigationController pushViewController:next animated:YES];
         } else {
-            [[ToastComponents shareToastComponents] showWithMessage:LocalizedString(@"Connection failed")];
+            [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"Connection failed")];
         }
         if (block) {
             block(result);
