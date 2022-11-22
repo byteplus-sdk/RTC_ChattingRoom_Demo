@@ -81,7 +81,7 @@ public class RtmInfo implements Parcelable {
         this.serverSignature = in.readString();
     }
 
-    public static final Parcelable.Creator<RtmInfo> CREATOR = new Parcelable.Creator<RtmInfo>() {
+    public static final Creator<RtmInfo> CREATOR = new Creator<RtmInfo>() {
         @Override
         public RtmInfo createFromParcel(Parcel source) {
             return new RtmInfo(source);
