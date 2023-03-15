@@ -10,23 +10,26 @@ import static com.ss.bytertc.engine.data.AudioMixingType.AUDIO_MIXING_TYPE_PLAYO
 import android.content.Context;
 import android.util.Log;
 
-import com.ss.bytertc.engine.RTCEngine;
+import com.ss.bytertc.engine.RTCRoom;
 import com.ss.bytertc.engine.RTCRoomConfig;
+import com.ss.bytertc.engine.RTCVideo;
 import com.ss.bytertc.engine.UserInfo;
 import com.ss.bytertc.engine.data.AudioMixingConfig;
-import com.ss.bytertc.engine.data.MuteState;
+import com.ss.bytertc.engine.data.AudioPropertiesConfig;
+import com.ss.bytertc.engine.data.RemoteAudioPropertiesInfo;
 import com.ss.bytertc.engine.data.StreamIndex;
-import com.ss.bytertc.engine.type.AudioVolumeInfo;
 import com.ss.bytertc.engine.type.ChannelProfile;
 import com.ss.bytertc.engine.type.LocalStreamStats;
+import com.ss.bytertc.engine.type.MediaStreamType;
 import com.ss.bytertc.engine.type.RemoteStreamStats;
 import com.ss.video.rtc.demo.basic_module.utils.AppExecutors;
 import com.ss.video.rtc.demo.basic_module.utils.Utilities;
+import com.volcengine.vertcdemo.core.eventbus.AudioVolumeEvent;
 import com.volcengine.vertcdemo.core.eventbus.SolutionDemoEventManager;
-import com.volcengine.vertcdemo.core.net.rtm.RTCEventHandlerWithRTM;
-import com.volcengine.vertcdemo.core.net.rtm.RtmInfo;
+import com.volcengine.vertcdemo.core.net.rtm.RTCEventHandlerWithRTS;
+import com.volcengine.vertcdemo.core.net.rtm.RTCRoomEventHandlerWithRTS;
+import com.volcengine.vertcdemo.core.net.rtm.RTSInfo;
 import com.volcengine.vertcdemo.voicechatdemo.core.event.AudioStatsEvent;
-import com.volcengine.vertcdemo.voicechatdemo.core.event.AudioVolumeEvent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,18 +43,9 @@ public class VoiceChatRTCManager {
 
     private static VoiceChatRTCManager sInstance;
 
-    private VoiceChatRtmClient mRTMClient;
+    private VoiceChatRTSClient mRTMClient;
 
-    private final RTCEventHandlerWithRTM mIRTCEngineEventHandler = new RTCEventHandlerWithRTM() {
-        private int rtt;
-        private float sendLossRate;
-        private float receivedLossRate;
-
-        @Override
-        public void onRoomStateChanged(String roomId, String uid, int state, String extraInfo) {
-            super.onRoomStateChanged(roomId, uid, state, extraInfo);
-            Log.d(TAG, String.format("onRoomStateChanged: %s, %s, %d, %s", roomId, uid, state, extraInfo));
-        }
+    private final RTCEventHandlerWithRTS mRTCVideoEventHandler = new RTCEventHandlerWithRTS() {
 
         @Override
         public void onWarning(int warn) {
@@ -63,6 +57,32 @@ public class VoiceChatRTCManager {
         public void onError(int err) {
             super.onError(err);
             Log.d(TAG, String.format("onError: %d", err));
+        }
+
+        @Override
+        public void onRemoteAudioPropertiesReport(RemoteAudioPropertiesInfo[] audioPropertiesInfos, int totalRemoteVolume) {
+            AudioVolumeEvent.Info[] infos = new AudioVolumeEvent.Info[audioPropertiesInfos.length];
+            for (int i = 0; i < audioPropertiesInfos.length; i++) {
+                final RemoteAudioPropertiesInfo property = audioPropertiesInfos[i];
+                infos[i] = new AudioVolumeEvent.Info(
+                        property.streamKey.getUserId(),
+                        property.audioPropertiesInfo.linearVolume
+                );
+            }
+            SolutionDemoEventManager.post(new AudioVolumeEvent(infos));
+        }
+    };
+
+    private final RTCRoomEventHandlerWithRTS mRTCRoomEventHandler = new RTCRoomEventHandlerWithRTS() {
+
+        private int rtt;
+        private float sendLossRate;
+        private float receivedLossRate;
+
+        @Override
+        public void onRoomStateChanged(String roomId, String uid, int state, String extraInfo) {
+            super.onRoomStateChanged(roomId, uid, state, extraInfo);
+            Log.d(TAG, String.format("onRoomStateChanged: %s, %s, %d, %s", roomId, uid, state, extraInfo));
         }
 
         @Override
@@ -82,11 +102,6 @@ public class VoiceChatRTCManager {
             }
         }
 
-        @Override
-        public void onAudioVolumeIndication(AudioVolumeInfo[] speakers, int totalRemoteVolume) {
-            super.onAudioVolumeIndication(speakers, totalRemoteVolume);
-            SolutionDemoEventManager.post(new AudioVolumeEvent(speakers));
-        }
 
         private void updateUI(){
             AudioStatsEvent event = new AudioStatsEvent(rtt, sendLossRate, receivedLossRate);
@@ -94,7 +109,8 @@ public class VoiceChatRTCManager {
         }
     };
 
-    private RTCEngine mInstance;
+    private RTCVideo mRTCVideo;
+    private RTCRoom mRTCRoom;
 
     public static VoiceChatRTCManager ins() {
         if (sInstance == null) {
@@ -103,17 +119,18 @@ public class VoiceChatRTCManager {
         return sInstance;
     }
 
-    public VoiceChatRtmClient getRTMClient() {
+    public VoiceChatRTSClient getRTMClient() {
         return mRTMClient;
     }
 
-    public void initEngine(RtmInfo info) {
+    public void initEngine(RTSInfo info) {
         destroyEngine();
-        mInstance = RTCEngine.createEngine(Utilities.getApplicationContext(), info.appId, mIRTCEngineEventHandler, null, null);
-        mInstance.stopVideoCapture();
-        mInstance.setAudioVolumeIndicationInterval(2000);
-        mRTMClient = new VoiceChatRtmClient(mInstance, info);
-        mIRTCEngineEventHandler.setBaseClient(mRTMClient);
+        mRTCVideo = RTCVideo.createRTCVideo(Utilities.getApplicationContext(), info.appId, mRTCVideoEventHandler, null, null);
+        mRTCVideo.enableAudioPropertiesReport(new AudioPropertiesConfig(2000));
+        mRTCVideo.stopVideoCapture();
+        mRTMClient = new VoiceChatRTSClient(mRTCVideo, info);
+        mRTCVideoEventHandler.setBaseClient(mRTMClient);
+        mRTCRoomEventHandler.setBaseClient(mRTMClient);
         initBGMRes();
         Log.d(TAG, String.format("initEngine: %s", info));
     }
@@ -138,84 +155,97 @@ public class VoiceChatRTCManager {
 
     public void destroyEngine() {
         Log.d(TAG, "destroyEngine");
-        RTCEngine.destroyEngine(mInstance);
+        RTCVideo.destroyRTCVideo();
     }
 
     public void joinRoom(String roomId, String token, String userId) {
         Log.d(TAG, String.format("joinRoom: %s %s %s", roomId, userId, token));
-        if (mInstance != null) {
+        if (mRTCVideo != null) {
             RTCRoomConfig config = new RTCRoomConfig(
-                    ChannelProfile.CHANNEL_PROFILE_LIVE_BROADCASTING,
+                    ChannelProfile.CHANNEL_PROFILE_COMMUNICATION,
                     true, true, true);
-            mInstance.joinRoom(token, roomId, new UserInfo(userId, null), config);
+            mRTCRoom = mRTCVideo.createRTCRoom(roomId);
+            mRTCRoom.setRTCRoomEventHandler(mRTCRoomEventHandler);
+            mRTCRoom.joinRoom(token, new UserInfo(userId, null), config);
         }
     }
 
     public void leaveRoom() {
         Log.d(TAG, "leaveRoom");
-        if (mInstance != null) {
-            mInstance.leaveRoom();
+        if (mRTCRoom != null) {
+            mRTCRoom.leaveRoom();
+            mRTCRoom.destroy();
+        }
+    }
+
+    public void stopAudioCapture() {
+        Log.d(TAG, "stopAudioCapture");
+        if (mRTCVideo != null) {
+            mRTCVideo.stopAudioCapture();
         }
     }
 
     public void startAudioCapture(boolean isStart) {
         Log.d(TAG, String.format("startAudioCapture: %b", isStart));
-        if (mInstance != null) {
+        if (mRTCVideo != null) {
             if (isStart) {
-                mInstance.startAudioCapture();
+                mRTCVideo.startAudioCapture();
             } else {
-                mInstance.stopAudioCapture();
+                mRTCVideo.stopAudioCapture();
             }
         }
     }
 
-    public void startMuteAudio(boolean isStart) {
-        Log.d(TAG, String.format("startMuteAudio: %b", isStart));
-        if (mInstance != null) {
-            MuteState state = isStart ? MuteState.MUTE_STATE_ON : MuteState.MUTE_STATE_OFF;
-            mInstance.muteLocalAudio(state);
+    public void startMuteAudio(boolean mute) {
+        Log.d(TAG, String.format("startMuteAudio: %b", mute));
+        if (mRTCRoom != null) {
+            if (mute) {
+                mRTCRoom.unpublishStream(MediaStreamType.RTC_MEDIA_STREAM_TYPE_AUDIO);
+            } else {
+                mRTCRoom.publishStream(MediaStreamType.RTC_MEDIA_STREAM_TYPE_AUDIO);
+            }
         }
     }
 
     public void startAudioMixing(boolean isStart) {
         Log.d(TAG, String.format("startAudioMixing: %b", isStart));
-        if (mInstance != null) {
+        if (mRTCVideo != null) {
             if (isStart) {
                 String bgmPath = getExternalResourcePath() + "bgm/voicechat_bgm.mp3";
-                mInstance.getAudioMixingManager().preloadAudioMixing(0, bgmPath);
+                mRTCVideo.getAudioMixingManager().preloadAudioMixing(0, bgmPath);
                 AudioMixingConfig config = new AudioMixingConfig(AUDIO_MIXING_TYPE_PLAYOUT_AND_PUBLISH, -1);
-                mInstance.getAudioMixingManager().startAudioMixing(0, bgmPath, config);
+                mRTCVideo.getAudioMixingManager().startAudioMixing(0, bgmPath, config);
             } else {
-                mInstance.getAudioMixingManager().stopAudioMixing(0);
+                mRTCVideo.getAudioMixingManager().stopAudioMixing(0);
             }
         }
     }
 
     public void resumeAudioMixing() {
         Log.d(TAG, "resumeAudioMixing");
-        if (mInstance != null) {
-            mInstance.getAudioMixingManager().resumeAudioMixing(0);
+        if (mRTCVideo != null) {
+            mRTCVideo.getAudioMixingManager().resumeAudioMixing(0);
         }
     }
 
     public void pauseAudioMixing() {
         Log.d(TAG, "pauseAudioMixing");
-        if (mInstance != null) {
-            mInstance.getAudioMixingManager().pauseAudioMixing(0);
+        if (mRTCVideo != null) {
+            mRTCVideo.getAudioMixingManager().pauseAudioMixing(0);
         }
     }
 
     public void adjustBGMVolume(int progress) {
         Log.d(TAG, String.format("adjustBGMVolume: %d", progress));
-        if (mInstance != null) {
-            mInstance.getAudioMixingManager().setAudioMixingVolume(0, progress, AUDIO_MIXING_TYPE_PLAYOUT_AND_PUBLISH);
+        if (mRTCVideo != null) {
+            mRTCVideo.getAudioMixingManager().setAudioMixingVolume(0, progress, AUDIO_MIXING_TYPE_PLAYOUT_AND_PUBLISH);
         }
     }
 
     public void adjustUserVolume(int progress) {
         Log.d(TAG, String.format("adjustUserVolume: %d", progress));
-        if (mInstance != null) {
-            mInstance.setCaptureVolume(StreamIndex.STREAM_INDEX_MAIN, progress);
+        if (mRTCVideo != null) {
+            mRTCVideo.setCaptureVolume(StreamIndex.STREAM_INDEX_MAIN, progress);
         }
     }
 

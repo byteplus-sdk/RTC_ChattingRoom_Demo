@@ -7,10 +7,11 @@
 #import "AlertActionManager.h"
 #import "SystemAuthority.h"
 
-@interface VoiceChatRTCManager () <ByteRTCEngineDelegate>
+@interface VoiceChatRTCManager () <ByteRTCVideoDelegate>
 
 @property (nonatomic, strong) VoiceChatRoomParamInfoModel *paramInfoModel;
 @property (nonatomic, assign) int audioMixingID;
+
 @end
 
 @implementation VoiceChatRTCManager
@@ -39,20 +40,24 @@
                          uid:(NSString *)uid {
     //关闭 本地音频/视频采集
     //Turn on/off local audio capture
-    [self.rtcEngineKit stopAudioCapture];
-    [self.rtcEngineKit stopVideoCapture];
+    [self.rtcVideo stopAudioCapture];
+    [self.rtcVideo stopVideoCapture];
 
     //设置音频路由模式，YES 扬声器/NO 听筒
     //Set the audio routing mode, YES speaker/NO earpiece
-    [self.rtcEngineKit setAudioPlaybackDevice:ByteRTCAudioPlaybackDeviceSpeakerphone];
+    [self.rtcVideo setAudioPlaybackDevice:ByteRTCAudioPlaybackDeviceSpeakerphone];
     
     //开启/关闭发言者音量键控
     //Turn on/off speaker volume keying
-    [self.rtcEngineKit setAudioVolumeIndicationInterval:300];
+    ByteRTCAudioPropertiesConfig *audioPropertiesConfig = [[ByteRTCAudioPropertiesConfig alloc]init];
+    audioPropertiesConfig.interval = 300;
+    audioPropertiesConfig.enable_spectrum = NO;
+    audioPropertiesConfig.enable_vad = NO;
+    [self.rtcVideo enableAudioPropertiesReport:audioPropertiesConfig];
     
     //设置用户为隐身状态
     //Set user to incognito state
-    [self.rtcEngineKit setUserVisibility:NO];
+    [self.rtcRoom setUserVisibility:NO];
 
     //加入房间，开始连麦,需要申请AppId和Token
     //Join the room, start connecting the microphone, you need to apply for AppId and Token
@@ -64,10 +69,12 @@
     config.isAutoPublish = YES;
     config.isAutoSubscribeAudio = YES;
     
-    [self.rtcEngineKit joinRoomByKey:token
-                        roomId:roomID
-                      userInfo:userInfo
-                 rtcRoomConfig:config];
+    self.rtcRoom  = [self.rtcVideo createRTCRoom:roomID];
+    self.rtcRoom.delegate = self;
+    [self.rtcRoom joinRoomByToken:token userInfo:userInfo roomConfig:config];
+    
+    
+        
 }
 
 #pragma mark - rtc method
@@ -79,14 +86,14 @@
         [SystemAuthority authorizationStatusWithType:AuthorizationTypeAudio
                                                block:^(BOOL isAuthorize) {
             if (isAuthorize) {
-                [self.rtcEngineKit startAudioCapture];
+                [self.rtcVideo startAudioCapture];
                 [self muteLocalAudioStream:NO];
-                [self.rtcEngineKit setUserVisibility:YES];
+                [self.rtcRoom setUserVisibility:YES];
             }
         }];
     } else {
-        [self.rtcEngineKit stopAudioCapture];
-        [self.rtcEngineKit setUserVisibility:NO];
+        [self.rtcVideo stopAudioCapture];
+        [self.rtcRoom setUserVisibility:NO];
     }
 }
 
@@ -94,9 +101,9 @@
     //开启/关闭 本地音频推流
     //Turn on/off local audio stream
     if (isMute) {
-        [self.rtcEngineKit muteLocalAudio:ByteRTCMuteStateOn];
+        [self.rtcRoom unpublishStream:ByteRTCMediaStreamTypeAudio];
     } else {
-        [self.rtcEngineKit muteLocalAudio:ByteRTCMuteStateOff];
+        [self.rtcRoom publishStream:ByteRTCMediaStreamTypeAudio];
     }
 }
 
@@ -105,13 +112,14 @@
     //Leave the channel
     [self makeCoHost:NO];
     [self muteLocalAudioStream:YES];
-    [self.rtcEngineKit leaveRoom];
+    [self.rtcRoom leaveRoom];
+    [self.rtcRoom destroy];
 }
 
 #pragma mark - Background Music Method
 
 - (void)startBackgroundMusic:(NSString *)filePath {
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcVideo getAudioMixingManager];
     
     ByteRTCAudioMixingConfig *config = [[ByteRTCAudioMixingConfig alloc] init];
     config.type = ByteRTCAudioMixingTypePlayoutAndPublish;
@@ -120,18 +128,18 @@
 }
 
 - (void)stopBackgroundMusic {
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcVideo getAudioMixingManager];
     [audioMixingManager stopAudioMixing:_audioMixingID];
 }
 
 - (void)pauseBackgroundMusic {
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcVideo getAudioMixingManager];
     
     [audioMixingManager pauseAudioMixing:_audioMixingID];
 }
 
 - (void)resumeBackgroundMusic {
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcVideo getAudioMixingManager];
     
     [audioMixingManager resumeAudioMixing:_audioMixingID];
 }
@@ -139,20 +147,20 @@
 - (void)setRecordingVolume:(NSInteger)volume {
     // 设置麦克风采集音量
     // Set the volume of the mixed music
-    [self.rtcEngineKit setCaptureVolume:ByteRTCStreamIndexMain volume:(int)volume];
+    [self.rtcVideo setCaptureVolume:ByteRTCStreamIndexMain volume:(int)volume];
 }
 
 - (void)setMusicVolume:(NSInteger)volume {
     // 设置混音音乐音量
     // Set the volume of the mixed music
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcVideo getAudioMixingManager];
     
     [audioMixingManager setAudioMixingVolume:_audioMixingID volume:(int)volume type:ByteRTCAudioMixingTypePlayoutAndPublish];
 }
 
-#pragma mark - ByteRTCEngineDelegate
+#pragma mark - ByteRTCVideoDelegate
 
-- (void)rtcEngine:(ByteRTCEngineKit *_Nonnull)engine onLocalStreamStats:(const ByteRTCLocalStreamStats * _Nonnull)stats {
+- (void)rtcRoom:(ByteRTCRoom *)rtcRoom onLocalStreamStats:(ByteRTCLocalStreamStats *)stats {
     if (stats.audio_stats.audioLossRate > 0) {
         self.paramInfoModel.sendLossRate = [NSString stringWithFormat:@"%.0f",stats.audio_stats.audioLossRate];
     }
@@ -162,14 +170,14 @@
     [self updateRoomParamInfoModel];
 }
 
-- (void)rtcEngine:(ByteRTCEngineKit * _Nonnull)engine onRemoteStreamStats:(const ByteRTCRemoteStreamStats * _Nonnull)stats {
+- (void)rtcRoom:(ByteRTCRoom *)rtcRoom onRemoteStreamStats:(ByteRTCRemoteStreamStats *)stats {
     if (stats.audio_stats.audioLossRate > 0) {
         self.paramInfoModel.receivedLossRate = [NSString stringWithFormat:@"%.0f",stats.audio_stats.audioLossRate];
     }
     [self updateRoomParamInfoModel];
 }
 
-- (void)rtcEngine:(ByteRTCEngineKit * _Nonnull)engine onAudioVolumeIndication:(NSArray<ByteRTCAudioVolumeInfo *> * _Nonnull)speakers totalRemoteVolume:(NSInteger)totalRemoteVolume {
+- (void)rtcEngine:(ByteRTCVideo * _Nonnull)engine onAudioVolumeIndication:(NSArray<ByteRTCAudioVolumeInfo *> * _Nonnull)speakers totalRemoteVolume:(NSInteger)totalRemoteVolume {
     NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
     for (int i = 0; i < speakers.count; i++) {
         ByteRTCAudioVolumeInfo *model = speakers[i];

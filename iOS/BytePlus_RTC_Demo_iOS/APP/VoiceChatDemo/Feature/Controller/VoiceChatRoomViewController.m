@@ -487,6 +487,7 @@
     self.hostAvatarView.userModel = self.hostUserModel;
     self.staticView.roomModel = self.roomModel;
     [self.bottomView updateBottomLists:userModel];
+    [self.bottomView updateButtonStatus:VoiceChatRoomBottomStatusLocalMic isSelect:(userModel.mic == UserMicOff) ? YES : NO];
     [self.seatComponent showSeatView:seatList loginUserModel:userModel];
 }
 

@@ -34,7 +34,7 @@ import com.volcengine.vertcdemo.common.SolutionToast;
 import com.volcengine.vertcdemo.core.SolutionDataManager;
 import com.volcengine.vertcdemo.core.eventbus.SolutionDemoEventManager;
 import com.volcengine.vertcdemo.core.net.IRequestCallback;
-import com.volcengine.vertcdemo.core.net.rtm.RTMBizResponse;
+import com.volcengine.vertcdemo.core.net.rtm.RTSBizResponse;
 import com.volcengine.vertcdemo.voicechat.R;
 import com.volcengine.vertcdemo.voicechatdemo.bean.AudienceChangedBroadcast;
 import com.volcengine.vertcdemo.voicechatdemo.bean.InteractChangedBroadcast;
@@ -126,9 +126,9 @@ public class SeatOptionDialog extends BaseDialog {
     private void managerSeat(@VoiceChatDataManager.SeatOption int option) {
         VoiceChatRTCManager.ins().getRTMClient().managerSeat(
                 mRoomId, mSeatInfo.seatIndex, option,
-                new IRequestCallback<RTMBizResponse>() {
+                new IRequestCallback<RTSBizResponse>() {
                     @Override
-                    public void onSuccess(RTMBizResponse data) {
+                    public void onSuccess(RTSBizResponse data) {
 
                     }
 
@@ -247,9 +247,9 @@ public class SeatOptionDialog extends BaseDialog {
                 managerSeat(VoiceChatDataManager.SEAT_OPTION_END_INTERACT);
             } else if (!isHost && isSelf) {
                 VoiceChatRTCManager.ins().getRTMClient().finishInteract(mRoomId, mSeatInfo.seatIndex,
-                        new IRequestCallback<RTMBizResponse>() {
+                        new IRequestCallback<RTSBizResponse>() {
                             @Override
-                            public void onSuccess(RTMBizResponse data) {
+                            public void onSuccess(RTSBizResponse data) {
 
                             }
 

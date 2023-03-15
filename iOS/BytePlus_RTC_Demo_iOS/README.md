@@ -3,11 +3,11 @@ Chatting room is an open source sample project provided by BytePlus RTC. This to
 ## **Note**
 
 After using the project file to build an application, you can use the built application for Chatting room.
-You and your colleagues must join the same room to have a Chatting room.
+You and your colleagues must join the same room to have a Chatting.
 
 ## **Prerequisites**
 
-- [Xcode](https://developer.apple.com/download/all/?q=Xcode) 12.0+
+- [Xcode](https://developer.apple.com/download/all/?q=Xcode) 14.0+
 	
 
 - Real device that is running iOS 12.0 or later
@@ -36,20 +36,20 @@ Obtain the **AccessKeyID and SecretAccessKey** on the [Key Management](https://c
 
 ### **Step 4: Build project**
 
-1. Open a CLI on a terminal and go to the root directory `VoiceChatDemo/iOS/veRTC_Demo_iOS`.
-	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_f355b34053e4cefd1cb120b83a7658f3.png" width="500px" >
+1. Open a CLI on a terminal and go to the root directory `RTC_ChattingRoom_Demo/iOS/BytePlus_RTC_Demo_iOS`.
+	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_38c317e885ad898398b50e87104a4afa.png" width="500px" >
 
 2. Run the `pod install` command to build the project.<br>
-	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_88ecddfff007de82fbb7a25ffa57a438.png" width="500px" >
+	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_f97c83d7400c663281114982fb4e2267.png" width="500px" >
 
-3. Go to the root directory `VideoChatDemo/iOS/veRTC_Demo_iOS`. Launch Xcode and open the file `veRTC_Demo.xcworkspace`
-	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_747178378f8ff84bd1ed945e2783f58a.png" width="500px" >	
+3. Go to the root directory `RTC_ChattingRoom_Demo/iOS/BytePlus_RTC_Demo_iOS`. Launch Xcode and open the file `veRTC_Demo.xcworkspace`
+	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_fb628014f0f80b42ba29f606fe84fc6e.png" width="500px" >	
 
  
 4. In Xcode, open the file `Pods/Development Pods/Core/BuildConfig.h` .
 
 5. Enter **LoginUrl**. <br>
-You can use **https://demo.byteplus.com/rtc/demo/rtc\_demo\_special/login** as the test domain name of the server. However, this domain name only provides testing running and cannot be used for official operations.
+You can use **https://demo.byteplus.com/rtc/demo/rtc_demo_special** as the test domain name of the server. However, this domain name only provides testing running and cannot be used for official operations.
 	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_1b4b3615df81d0039e0514122b5e65df.png" width="500px" >
 6. Enter AppID, AppKey, AccessKeyID, and SecretAccessKey <br>
 Enter the **AppID, App Key, AccessKeyID**, and **SecretAccessKey** obtained from the BytePlus RTC console in the corresponding fields of the file `BuildConfig.h`.<br>
@@ -70,11 +70,11 @@ Enter the **AppID, App Key, AccessKeyID**, and **SecretAccessKey** obtained from
 	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_0b906d74aa894b60d13aa31747a69a22.png" width="500px" >
 
 3.2 Select Personal Team from the **Team** pop-up menu.
-	<img src="(https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_5b16cbcb2ae6b5d8f3961d35a675f037.png" width="500px" >
+	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_5b16cbcb2ae6b5d8f3961d35a675f037.png" width="500px" >
 
 3.3 **Change Bundle Identifier.** <br>
 The default `vertc.veRTCDemo.ios` has been registered. Change it to another Bundle ID in the format of `vertc.xxx`.
-	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_49ae7cf89288819dcfb6f560f4948d64.png" width="500px" >
+	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_3f495e94b935f3e0ddf0f367d95d28bb.png" width="500px" >
 
 ### **Step 6: Compile and run**
 

@@ -24,12 +24,13 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ss.video.rtc.demo.basic_module.utils.SafeToast;
 import com.volcengine.vertcdemo.common.BaseDialog;
 import com.volcengine.vertcdemo.common.IAction;
 import com.volcengine.vertcdemo.common.SolutionToast;
 import com.volcengine.vertcdemo.core.eventbus.SolutionDemoEventManager;
 import com.volcengine.vertcdemo.core.net.IRequestCallback;
-import com.volcengine.vertcdemo.core.net.rtm.RTMBizResponse;
+import com.volcengine.vertcdemo.core.net.rtm.RTSBizResponse;
 import com.volcengine.vertcdemo.voicechat.R;
 import com.volcengine.vertcdemo.voicechatdemo.bean.AudienceApplyBroadcast;
 import com.volcengine.vertcdemo.voicechatdemo.bean.AudienceChangedBroadcast;
@@ -110,12 +111,17 @@ public class AudienceManagerDialog extends BaseDialog {
             return;
         }
         int status = userInfo.userStatus;
-        IRequestCallback<RTMBizResponse> callback = new IRequestCallback<RTMBizResponse>() {
+        IRequestCallback<RTSBizResponse> callback = new IRequestCallback<RTSBizResponse>() {
             @Override
-            public void onSuccess(RTMBizResponse data) {
+            public void onSuccess(RTSBizResponse data) {
                 if (userInfo.userStatus != VCUserInfo.USER_STATUS_APPLYING) {
-                    SolutionToast.show(R.string.inviting);
+                    SafeToast.show(R.string.inviting);
+                } else {
+                    if (mApplyAudienceAdapter.getItemCount() <= 1){
+                        setHasNewApply(false);
+                    }
                 }
+                cancel();
             }
 
             @Override
@@ -123,6 +129,7 @@ public class AudienceManagerDialog extends BaseDialog {
                 if (errorCode == 506) {
                     SolutionToast.show(R.string.all_seats_filled_up_txt);
                 }
+                cancel();
             }
         };
         if (status == VCUserInfo.USER_STATUS_NORMAL) {
@@ -180,9 +187,9 @@ public class AudienceManagerDialog extends BaseDialog {
             }
             v.setEnabled(false);
             int type = isChecked ? DISABLE_ALLOW_APPLY : ENABLE_ALLOW_APPLY;
-            VoiceChatRTCManager.ins().getRTMClient().manageInteractApply(mRoomId, type, new IRequestCallback<RTMBizResponse>() {
+            VoiceChatRTCManager.ins().getRTMClient().manageInteractApply(mRoomId, type, new IRequestCallback<RTSBizResponse>() {
                 @Override
-                public void onSuccess(RTMBizResponse data) {
+                public void onSuccess(RTSBizResponse data) {
                     mAllowApply = isChecked;
                     v.setEnabled(true);
                     VoiceChatDataManager.ins().setAllowUserApply(mAllowApply);

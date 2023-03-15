@@ -31,8 +31,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.reflect.TypeToken;
-import com.ss.bytertc.engine.handler.IRTCEngineEventHandler;
-import com.ss.bytertc.engine.type.AudioVolumeInfo;
 import com.ss.video.rtc.demo.basic_module.acivities.BaseActivity;
 import com.ss.video.rtc.demo.basic_module.utils.GsonUtils;
 import com.ss.video.rtc.demo.basic_module.utils.IMEUtils;
@@ -40,10 +38,11 @@ import com.ss.video.rtc.demo.basic_module.utils.Utilities;
 import com.volcengine.vertcdemo.common.IAction;
 import com.volcengine.vertcdemo.common.SolutionToast;
 import com.volcengine.vertcdemo.core.SolutionDataManager;
+import com.volcengine.vertcdemo.core.eventbus.AudioVolumeEvent;
 import com.volcengine.vertcdemo.core.eventbus.SocketConnectEvent;
 import com.volcengine.vertcdemo.core.eventbus.SolutionDemoEventManager;
 import com.volcengine.vertcdemo.core.net.IRequestCallback;
-import com.volcengine.vertcdemo.core.net.rtm.RTMBizResponse;
+import com.volcengine.vertcdemo.core.net.rtm.RTSBizResponse;
 import com.volcengine.vertcdemo.voicechat.R;
 import com.volcengine.vertcdemo.voicechatdemo.bean.AudienceApplyBroadcast;
 import com.volcengine.vertcdemo.voicechatdemo.bean.AudienceChangedBroadcast;
@@ -64,7 +63,6 @@ import com.volcengine.vertcdemo.voicechatdemo.bean.VCUserInfo;
 import com.volcengine.vertcdemo.voicechatdemo.core.VoiceChatDataManager;
 import com.volcengine.vertcdemo.voicechatdemo.core.VoiceChatRTCManager;
 import com.volcengine.vertcdemo.voicechatdemo.core.event.AudioStatsEvent;
-import com.volcengine.vertcdemo.voicechatdemo.core.event.AudioVolumeEvent;
 import com.volcengine.vertcdemo.voicechatdemo.feature.CommonDialog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -124,9 +122,9 @@ public class VoiceChatRoomMainActivity extends BaseActivity {
         }
     };
 
-    private final IRequestCallback<RTMBizResponse> mSendMessageCallback = new IRequestCallback<RTMBizResponse>() {
+    private final IRequestCallback<RTSBizResponse> mSendMessageCallback = new IRequestCallback<RTSBizResponse>() {
         @Override
-        public void onSuccess(RTMBizResponse data) {
+        public void onSuccess(RTSBizResponse data) {
 
         }
 
@@ -136,9 +134,9 @@ public class VoiceChatRoomMainActivity extends BaseActivity {
         }
     };
 
-    private final IRequestCallback<RTMBizResponse> mFinishCallback = new IRequestCallback<RTMBizResponse>() {
+    private final IRequestCallback<RTSBizResponse> mFinishCallback = new IRequestCallback<RTSBizResponse>() {
         @Override
-        public void onSuccess(RTMBizResponse data) {
+        public void onSuccess(RTSBizResponse data) {
 
         }
 
@@ -148,9 +146,9 @@ public class VoiceChatRoomMainActivity extends BaseActivity {
         }
     };
 
-    private final IRequestCallback<RTMBizResponse> mLeaveCallback = new IRequestCallback<RTMBizResponse>() {
+    private final IRequestCallback<RTSBizResponse> mLeaveCallback = new IRequestCallback<RTSBizResponse>() {
         @Override
-        public void onSuccess(RTMBizResponse data) {
+        public void onSuccess(RTSBizResponse data) {
 
         }
 
@@ -385,6 +383,7 @@ public class VoiceChatRoomMainActivity extends BaseActivity {
         VoiceChatDataManager.ins().clearData();
         SolutionDemoEventManager.unregister(this);
         VoiceChatRTCManager.ins().leaveRoom();
+        VoiceChatRTCManager.ins().stopAudioCapture();
         VoiceChatRTCManager.ins().startAudioMixing(false);
         VoiceChatRTCManager.ins().startAudioCapture(false);
         if (mSelfUserInfo == null || mRoomInfo == null) {
@@ -471,9 +470,9 @@ public class VoiceChatRoomMainActivity extends BaseActivity {
         VoiceChatRTCManager.ins().getRTMClient().updateMediaStatus(
                 mRoomInfo.roomId, mSelfUserInfo.userId,
                 isMicOn ? VoiceChatDataManager.MIC_OPTION_ON : VoiceChatDataManager.MIC_OPTION_OFF,
-                new IRequestCallback<RTMBizResponse>() {
+                new IRequestCallback<RTSBizResponse>() {
                     @Override
-                    public void onSuccess(RTMBizResponse data) {
+                    public void onSuccess(RTSBizResponse data) {
 
                     }
 
@@ -630,9 +629,9 @@ public class VoiceChatRoomMainActivity extends BaseActivity {
         mBottomOptionLayout.updateMicStatus(isMicOn);
         int option = isMicOn ? VoiceChatDataManager.MIC_OPTION_ON : VoiceChatDataManager.MIC_OPTION_OFF;
         VoiceChatRTCManager.ins().getRTMClient().updateMediaStatus(mRoomInfo.roomId, mSelfUserInfo.userId, option,
-                new IRequestCallback<RTMBizResponse>() {
+                new IRequestCallback<RTSBizResponse>() {
                     @Override
-                    public void onSuccess(RTMBizResponse data) {
+                    public void onSuccess(RTSBizResponse data) {
 
                     }
 
@@ -663,9 +662,9 @@ public class VoiceChatRoomMainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAudioVolumeEvent(AudioVolumeEvent event) {
-        AudioVolumeInfo[] infos = event.speakers;
+        AudioVolumeEvent.Info[] infos = event.speakers;
         if (infos != null && infos.length != 0) {
-            for (AudioVolumeInfo info : infos) {
+            for (AudioVolumeEvent.Info info : infos) {
                 mSeatsGroupLayout.onUserSpeaker(info.uid, info.linearVolume);
             }
         }

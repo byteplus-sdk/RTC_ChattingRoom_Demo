@@ -6,11 +6,11 @@
 package com.volcengine.vertcdemo.voicechatdemo.bean;
 
 import com.google.gson.annotations.SerializedName;
-import com.volcengine.vertcdemo.core.net.rtm.RTMBizResponse;
+import com.volcengine.vertcdemo.core.net.rtm.RTSBizResponse;
 
 import java.util.Map;
 
-public class JoinRoomResponse implements RTMBizResponse {
+public class JoinRoomResponse implements RTSBizResponse {
     public boolean isFromCreate = true;
     @SerializedName("room_info")
     public VCRoomInfo roomInfo;

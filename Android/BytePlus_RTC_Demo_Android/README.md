@@ -3,7 +3,7 @@ Chatting room is an open source sample project provided by BytePlus RTC. This to
 ## **Note**
 
 After using the project file to build an application, you can use the built application for Chatting room.
-You and your colleagues must join the same room to have a Chatting room.
+You and your colleagues must join the same room to have a Chatting.
 This open-source project doesn't support Effects-related function. Please download [BytePlus RTC APP](https://docs.byteplus.com/byteplus-rtc/docs/75707#download-solution-demo) to experience it.
 If you have installed the BytePlus RTC APP, please uninstall it before compiling and running the sample project. Otherwise, an installation failure message will be displayed.
 
@@ -34,16 +34,16 @@ Obtain the AppID and AppKey by creating an application on the [App Management](h
 Obtain the **AccessKeyID and SecretAccessKey** on the [Key Management](https://console.byteplus.com/iam/keymanage) page in the BytePlus RTC console.
 
 ### **Step 4: Build project**
-1. Launch Android Studio and open the folder `VideoChatDemo/Android/veRTC_Demo_Android`.
+1. Launch Android Studio and open the folder `RTC_ChattingRoom_Demo/Android/BytePlus_RTC_Demo_Android`.
 2. Enter the **LoginUrl**.
-Open the file `gradle.properties` and enter the **LoginUrl**.
-You can use **https://demo.byteplus.com/rtc/demo/rtc\_demo\_special/login** as the test domain name of the server. However, this domain name only provides testing running and cannot be used for official operations.
-	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_3794b5dbc97b4559611f7b075fcb20d1.png" width="500px" >
+Open the file `scene-core/gradle.properties` and enter the **LoginUrl**.
+You can use **https://demo.byteplus.com/rtc/demo/rtc_demo_special/login** as the test domain name of the server. However, this domain name only provides testing running and cannot be used for official operations.
+	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_707a264cf9e00eee41c42d4ceb9a7b40.png" width="500px" >
 
 
 3. **Enter AppID, AppKey, AccessKeyID, and SecretAccessKey.** <br>
-Open the file`gradle.properties`in the root directory and enter the **AppID, AppKey, AccessKeyID, and SecretAccessKey.** <br>
-	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_9ab4f0ed66084fc7d7fe996076c6f150.png" width="500px" >
+Open the file`component/joinrtsparams/gradle.properties`in the root directory and enter the **AppID, AppKey, AccessKeyID, and SecretAccessKey.** <br>
+	<img src="https://portal.volccdn.com/obj/volcfe/cloud-universal-doc/upload_778b0501a353d8aeb4379b7cc4b59c4a.png" width="500px" >
 
 **Step 5: Compile and run**
 

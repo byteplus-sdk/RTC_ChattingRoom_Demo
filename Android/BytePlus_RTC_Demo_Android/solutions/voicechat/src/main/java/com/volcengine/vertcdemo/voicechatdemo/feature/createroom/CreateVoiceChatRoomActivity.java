@@ -28,9 +28,7 @@ import com.volcengine.vertcdemo.core.SolutionDataManager;
 import com.volcengine.vertcdemo.core.net.IRequestCallback;
 import com.volcengine.vertcdemo.voicechat.R;
 import com.volcengine.vertcdemo.voicechatdemo.bean.CreateRoomResponse;
-import com.volcengine.vertcdemo.voicechatdemo.core.VoiceChatDataManager;
 import com.volcengine.vertcdemo.voicechatdemo.core.VoiceChatRTCManager;
-import com.volcengine.vertcdemo.voicechatdemo.core.VoiceChatRtmClient;
 import com.volcengine.vertcdemo.voicechatdemo.feature.roommain.VoiceChatRoomMainActivity;
 
 public class CreateVoiceChatRoomActivity extends BaseActivity implements View.OnClickListener {

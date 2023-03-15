@@ -9,7 +9,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDialog;
@@ -19,8 +18,8 @@ import com.volcengine.vertcdemo.voicechat.R;
 public class CommonDialog extends AppCompatDialog {
     private TextView mTitleTv;
     private TextView mMessageTv;
-    private Button mPositiveBtn;
-    private Button mNegativeBtn;
+    private TextView mPositiveBtn;
+    private TextView mNegativeBtn;
     private View mDivider;
 
     public CommonDialog(Context context) {
@@ -30,8 +29,8 @@ public class CommonDialog extends AppCompatDialog {
         View view = inflater.inflate(R.layout.dialog_common_voice, (ViewGroup)null);
         this.mTitleTv = (TextView)view.findViewById(R.id.dialog_title_tv);
         this.mMessageTv = (TextView)view.findViewById(R.id.dialog_msg_tv);
-        this.mPositiveBtn = (Button)view.findViewById(R.id.dialog_positive_btn);
-        this.mNegativeBtn = (Button)view.findViewById(R.id.dialog_negative_btn);
+        this.mPositiveBtn = (TextView)view.findViewById(R.id.dialog_positive_btn);
+        this.mNegativeBtn = (TextView)view.findViewById(R.id.dialog_negative_btn);
         this.mDivider = view.findViewById(R.id.dialog_btn_divider);
         this.setContentView(view, new ViewGroup.LayoutParams(-1, -2));
         view.setOnClickListener((v) -> {

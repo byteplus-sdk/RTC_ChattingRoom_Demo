@@ -5,7 +5,7 @@
 
 #import "BaseRTCManager.h"
 #import "VoiceChatRTCManager.h"
-#import <BytePlusRTC/objc/rtc/ByteRTCEngineKit.h>
+#import <BytePlusRTC/objc/ByteRTCVideo.h>
 #import "VoiceChatRoomParamInfoModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
