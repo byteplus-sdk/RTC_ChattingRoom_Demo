@@ -51,6 +51,7 @@ import com.volcengine.vertcdemo.voicechat.bean.VoiceChatResponse;
 import com.volcengine.vertcdemo.voicechat.bean.VoiceChatRoomInfo;
 import com.volcengine.vertcdemo.voicechat.bean.VoiceChatSeatInfo;
 import com.volcengine.vertcdemo.voicechat.bean.VoiceChatUserInfo;
+import com.volcengine.vertcdemo.voicechat.core.Constants;
 import com.volcengine.vertcdemo.voicechat.core.VoiceChatDataManager;
 import com.volcengine.vertcdemo.voicechat.core.VoiceChatRTCManager;
 import com.volcengine.vertcdemo.voicechat.databinding.ActivityVoiceChatMainBinding;
@@ -89,6 +90,7 @@ public class VoiceChatRoomMainActivity extends SolutionBaseActivity {
 
     private boolean isMicOn = true;
     private boolean isLeaveByKickOut = false;
+    private String mLastInputText;
 
     private final IRequestCallback<JoinRoomResponse> mJoinCallback = new IRequestCallback<JoinRoomResponse>() {
         @Override
@@ -99,7 +101,15 @@ public class VoiceChatRoomMainActivity extends SolutionBaseActivity {
 
         @Override
         public void onError(int errorCode, String message) {
-            onArgsError(ErrorTool.getErrorMessageByErrorCode(errorCode, message));
+            String hint;
+            if (errorCode == Constants.ErrorCode.CODE_422) {
+                hint = getString(R.string.joining_room_failed);
+            } else {
+                hint = ErrorTool.getErrorMessageByErrorCode(errorCode, message);
+            }
+            if (!TextUtils.isEmpty(hint)) {
+                onArgsError(hint);
+            }
         }
     };
 
@@ -425,7 +435,15 @@ public class VoiceChatRoomMainActivity extends SolutionBaseActivity {
     }
 
     private void openInput() {
-        InputTextDialogFragment.showInput(getSupportFragmentManager(), (this::onSendMessage));
+        InputTextDialogFragment.showInput(getSupportFragmentManager(), mLastInputText, new InputTextDialogFragment.IInputCallback() {
+            @Override
+            public void onSendClick(InputTextDialogFragment fragment, String text, boolean sent) {
+                mLastInputText = sent ? null : text;
+                if (sent) {
+                    onSendMessage(fragment, text);
+                }
+            }
+        });
     }
 
     private void closeInput() {
