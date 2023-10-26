@@ -42,15 +42,12 @@
     self.isEnableAudioCapture = NO;
     // Turn on/off local audio capture
     [self.rtcEngineKit stopAudioCapture];
-    [self.rtcEngineKit stopVideoCapture];
     // Set the audio routing mode, YES speaker/NO earpiece
     [self.rtcEngineKit setDefaultAudioRoute:ByteRTCAudioRouteSpeakerphone];
     // Turn on/off speaker volume keying
     ByteRTCAudioPropertiesConfig *audioPropertiesConfig = [[ByteRTCAudioPropertiesConfig alloc] init];
     audioPropertiesConfig.interval = 300;
     [self.rtcEngineKit enableAudioPropertiesReport:audioPropertiesConfig];
-    // Set up the local rendering and encoding mirror (the same local and remote)
-    [self.rtcEngineKit setLocalVideoMirrorType:ByteRTCMirrorTypeRenderAndEncoder];
     // Set user to incognito state
     [self.rtcRoom setUserVisibility:NO];
     // Join the room, start connecting the microphone, you need to apply for AppId and Token
@@ -106,32 +103,32 @@
 
 - (void)startBackgroundMusic:(NSString *)filePath {
     // Start background music mixing
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
     
-    ByteRTCAudioMixingConfig *config = [[ByteRTCAudioMixingConfig alloc] init];
+    ByteRTCAudioEffectPlayerConfig *config = [[ByteRTCAudioEffectPlayerConfig alloc] init];
     config.type = ByteRTCAudioMixingTypePlayoutAndPublish;
     config.playCount = -1;
-    [audioMixingManager startAudioMixing:_audioMixingID filePath:filePath config:config];
+    [audioMixingManager start:_audioMixingID filePath:filePath config:config];
 }
 
 - (void)stopBackgroundMusic {
     // Stop background music mixing
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
-    [audioMixingManager stopAudioMixing:_audioMixingID];
+    ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
+    [audioMixingManager stop:_audioMixingID];
 }
 
 - (void)pauseBackgroundMusic {
     // Pause background music mixing
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
     
-    [audioMixingManager pauseAudioMixing:_audioMixingID];
+    [audioMixingManager pause:_audioMixingID];
 }
 
 - (void)resumeBackgroundMusic {
     // Continue background music mixing
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
     
-    [audioMixingManager resumeAudioMixing:_audioMixingID];
+    [audioMixingManager resume:_audioMixingID];
 }
 
 - (void)setRecordingVolume:(NSInteger)volume {
@@ -141,9 +138,9 @@
 
 - (void)setMusicVolume:(NSInteger)volume {
     // Set the volume of the mixed music
-    ByteRTCAudioMixingManager *audioMixingManager = [self.rtcEngineKit getAudioMixingManager];
+    ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
     
-    [audioMixingManager setAudioMixingVolume:_audioMixingID volume:(int)volume type:ByteRTCAudioMixingTypePlayoutAndPublish];
+    [audioMixingManager setVolume:_audioMixingID volume:(int)volume];
 }
 
 #pragma mark - ByteRTCRoomDelegate

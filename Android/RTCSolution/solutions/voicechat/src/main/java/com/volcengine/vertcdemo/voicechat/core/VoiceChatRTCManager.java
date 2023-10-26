@@ -12,8 +12,10 @@ import com.ss.bytertc.engine.RTCRoom;
 import com.ss.bytertc.engine.RTCRoomConfig;
 import com.ss.bytertc.engine.RTCVideo;
 import com.ss.bytertc.engine.UserInfo;
-import com.ss.bytertc.engine.data.AudioMixingConfig;
+import com.ss.bytertc.engine.audio.IAudioEffectPlayer;
+import com.ss.bytertc.engine.data.AudioEffectPlayerConfig;
 import com.ss.bytertc.engine.data.AudioPropertiesConfig;
+import com.ss.bytertc.engine.data.AudioRoute;
 import com.ss.bytertc.engine.data.LocalAudioPropertiesInfo;
 import com.ss.bytertc.engine.data.RemoteAudioPropertiesInfo;
 import com.ss.bytertc.engine.data.StreamIndex;
@@ -24,16 +26,16 @@ import com.ss.bytertc.engine.type.MediaStreamType;
 import com.ss.bytertc.engine.type.NetworkQualityStats;
 import com.ss.bytertc.engine.type.RemoteStreamStats;
 import com.volcengine.vertcdemo.common.AppExecutors;
-import com.volcengine.vertcdemo.core.eventbus.SDKReconnectToRoomEvent;
-import com.volcengine.vertcdemo.utils.AppUtil;
 import com.volcengine.vertcdemo.common.MLog;
 import com.volcengine.vertcdemo.core.SolutionDataManager;
+import com.volcengine.vertcdemo.core.eventbus.SDKReconnectToRoomEvent;
 import com.volcengine.vertcdemo.core.eventbus.SolutionDemoEventManager;
 import com.volcengine.vertcdemo.core.net.rts.RTCRoomEventHandlerWithRTS;
 import com.volcengine.vertcdemo.core.net.rts.RTCVideoEventHandlerWithRTS;
 import com.volcengine.vertcdemo.core.net.rts.RTSInfo;
-import com.volcengine.vertcdemo.voicechat.event.SDKAudioStatsEvent;
+import com.volcengine.vertcdemo.utils.AppUtil;
 import com.volcengine.vertcdemo.voicechat.event.SDKAudioPropertiesEvent;
+import com.volcengine.vertcdemo.voicechat.event.SDKAudioStatsEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,6 +44,8 @@ import java.util.List;
 public class VoiceChatRTCManager {
 
     private static final String TAG = "VoiceChatRTCManager";
+
+    private static final int AUDIO_EFFECT_ID = 0;
 
     private static VoiceChatRTCManager sInstance;
 
@@ -168,6 +172,7 @@ public class VoiceChatRTCManager {
         mRTCVideo.setBusinessId(info.bid);
         // set audio scenario
         mRTCVideo.setAudioScenario(AudioScenarioType.AUDIO_SCENARIO_COMMUNICATION);
+        mRTCVideo.setDefaultAudioRoute(AudioRoute.AUDIO_ROUTE_SPEAKERPHONE);
 
         mRTCVideo.stopVideoCapture();
         enableAudioVolumeIndication(2000);
@@ -267,13 +272,16 @@ public class VoiceChatRTCManager {
     public void startAudioMixing(boolean isStart) {
         Log.d(TAG, String.format("startAudioMixing: %b", isStart));
         if (mRTCVideo != null) {
+            IAudioEffectPlayer effectPlayer = mRTCVideo.getAudioEffectPlayer();
             if (isStart) {
                 String bgmPath = getExternalResourcePath() + "bgm/voicechat_bgm.mp3";
-                mRTCVideo.getAudioMixingManager().preloadAudioMixing(0, bgmPath);
-                AudioMixingConfig config = new AudioMixingConfig(AUDIO_MIXING_TYPE_PLAYOUT_AND_PUBLISH, -1);
-                mRTCVideo.getAudioMixingManager().startAudioMixing(0, bgmPath, config);
+                effectPlayer.preload(AUDIO_EFFECT_ID, bgmPath);
+                AudioEffectPlayerConfig config = new AudioEffectPlayerConfig();
+                config.type = AUDIO_MIXING_TYPE_PLAYOUT_AND_PUBLISH;
+                config.playCount = -1;
+                effectPlayer.start(AUDIO_EFFECT_ID, bgmPath, config);
             } else {
-                mRTCVideo.getAudioMixingManager().stopAudioMixing(0);
+                effectPlayer.stop(AUDIO_EFFECT_ID);
             }
         }
     }
@@ -281,28 +289,32 @@ public class VoiceChatRTCManager {
     public void resumeAudioMixing() {
         Log.d(TAG, "resumeAudioMixing");
         if (mRTCVideo != null) {
-            mRTCVideo.getAudioMixingManager().resumeAudioMixing(0);
+            IAudioEffectPlayer effectPlayer = mRTCVideo.getAudioEffectPlayer();
+            effectPlayer.resume(AUDIO_EFFECT_ID);
         }
     }
 
     public void pauseAudioMixing() {
         Log.d(TAG, "pauseAudioMixing");
         if (mRTCVideo != null) {
-            mRTCVideo.getAudioMixingManager().pauseAudioMixing(0);
+            IAudioEffectPlayer effectPlayer = mRTCVideo.getAudioEffectPlayer();
+            effectPlayer.pause(AUDIO_EFFECT_ID);
         }
     }
 
     public void stopAudioMixing() {
         Log.d(TAG, "stopAudioMixing");
         if (mRTCVideo != null) {
-            mRTCVideo.getAudioMixingManager().stopAudioMixing(0);
+            IAudioEffectPlayer effectPlayer = mRTCVideo.getAudioEffectPlayer();
+            effectPlayer.stop(AUDIO_EFFECT_ID);
         }
     }
 
     public void adjustBGMVolume(int progress) {
         Log.d(TAG, String.format("adjustBGMVolume: %d", progress));
         if (mRTCVideo != null) {
-            mRTCVideo.getAudioMixingManager().setAudioMixingVolume(0, progress, AUDIO_MIXING_TYPE_PLAYOUT_AND_PUBLISH);
+            IAudioEffectPlayer effectPlayer = mRTCVideo.getAudioEffectPlayer();
+            effectPlayer.setVolume(AUDIO_EFFECT_ID, progress);
         }
     }
 
