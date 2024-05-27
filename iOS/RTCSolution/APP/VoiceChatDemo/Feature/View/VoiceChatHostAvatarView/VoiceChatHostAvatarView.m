@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatHostAvatarView.h"
 
@@ -84,30 +84,30 @@
     [self addSubview:self.userNameLabel];
     [self addSubview:self.maskView];
     [self addSubview:self.centerImageView];
-    
+
     [self.avatarBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(60, 60));
         make.top.mas_equalTo(7);
         make.centerX.equalTo(self);
     }];
-    
+
     [self.maskView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.avatarBgImageView);
     }];
-    
+
     [self.animationView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.avatarBgImageView);
         make.width.height.mas_equalTo(74);
     }];
-    
+
     [self.avatarLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self.avatarBgImageView);
     }];
-    
+
     [self.userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.bottom.equalTo(self);
     }];
-    
+
     [self.centerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(20, 20));
         make.center.equalTo(self.avatarBgImageView);
@@ -118,13 +118,13 @@
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     animation.values = @[@(0.81), @(1.0), @(1.0)];
     animation.keyTimes = @[@(0), @(0.27), @(1.0)];
-    
+
     CAKeyframeAnimation *animation2 = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
     animation2.values = @[@(0), @(0.2), @(0.4), @(0.2)];
     animation2.keyTimes = @[@(0), @(0.27), @(0.27), @(1.0)];
-    
+
     CAAnimationGroup *group = [CAAnimationGroup animation];
-    group.animations = @[animation,animation2];
+    group.animations = @[animation, animation2];
     group.duration = 1.1;
     group.repeatCount = MAXFLOAT;
     group.removedOnCompletion = NO;

@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatSeatView.h"
 #import "VoiceChatSeatItemView.h"
@@ -31,7 +31,7 @@ static const NSInteger MaxNumber = 8;
 
 - (void)setSeatList:(NSArray<VoiceChatSeatModel *> *)seatList {
     _seatList = seatList;
-    
+
     for (int i = 0; i < self.itemViewLists.count; i++) {
         VoiceChatSeatItemView *itemView = self.itemViewLists[i];
         if (i < seatList.count) {
@@ -113,7 +113,7 @@ static const NSInteger MaxNumber = 8;
         [self addSubview:itemView];
         [line1List addObject:itemView];
         [self.itemViewLists addObject:itemView];
-        
+
         __weak __typeof(self) wself = self;
         itemView.clickBlock = ^(VoiceChatSeatModel *seatModel) {
             if (wself.clickBlock) {
@@ -122,14 +122,14 @@ static const NSInteger MaxNumber = 8;
         };
     }
     [line1List mas_distributeViewsAlongAxis:MASAxisTypeHorizontal
-                                 withFixedItemLength:52
-                                         leadSpacing:0
-                                         tailSpacing:0];
+                        withFixedItemLength:52
+                                leadSpacing:0
+                                tailSpacing:0];
     [line1List mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self);
         make.height.mas_equalTo(80);
     }];
-    
+
     NSMutableArray *line2List = [[NSMutableArray alloc] init];
     for (int i = 0; i < MaxNumber / 2; i++) {
         VoiceChatSeatItemView *itemView = [[VoiceChatSeatItemView alloc] init];
@@ -137,7 +137,7 @@ static const NSInteger MaxNumber = 8;
         [self addSubview:itemView];
         [line2List addObject:itemView];
         [self.itemViewLists addObject:itemView];
-        
+
         __weak __typeof(self) wself = self;
         itemView.clickBlock = ^(VoiceChatSeatModel *seatModel) {
             if (wself.clickBlock) {
@@ -146,9 +146,9 @@ static const NSInteger MaxNumber = 8;
         };
     }
     [line2List mas_distributeViewsAlongAxis:MASAxisTypeHorizontal
-                                 withFixedItemLength:52
-                                         leadSpacing:0
-                                         tailSpacing:0];
+                        withFixedItemLength:52
+                                leadSpacing:0
+                                tailSpacing:0];
     [line2List mas_updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self);
         make.height.mas_equalTo(80);

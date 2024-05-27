@@ -1,11 +1,11 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
-#import <UIKit/UIKit.h>
-#import "VoiceChatRoomUserListtCell.h"
 #import "VoiceChatRTSManager.h"
+#import "VoiceChatRoomUserListtCell.h"
+#import <UIKit/UIKit.h>
 @class VoiceChatRoomAudienceListsView;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)voiceChatRoomAudienceListsView:(VoiceChatRoomAudienceListsView *)voiceChatRoomAudienceListsView clickButton:(VoiceChatUserModel *)model;
 
 @end
-
 
 @interface VoiceChatRoomAudienceListsView : UIView
 

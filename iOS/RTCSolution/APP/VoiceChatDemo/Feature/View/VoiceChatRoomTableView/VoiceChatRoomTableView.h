@@ -1,10 +1,10 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
-#import <UIKit/UIKit.h>
 #import "VoiceChatRoomCell.h"
+#import <UIKit/UIKit.h>
 @class VoiceChatRoomTableView;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,7 +20,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSArray *dataLists;
 
 @property (nonatomic, weak) id<VoiceChatRoomTableViewDelegate> delegate;
-
 
 @end
 

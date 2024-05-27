@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatTextInputView.h"
 
@@ -23,28 +23,28 @@
         [self.maskView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
         }];
-        
+
         [self addSubview:self.senderButton];
         [self.senderButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(60, 28));
             make.right.mas_equalTo(-16);
             make.centerY.equalTo(self);
         }];
-        
+
         [self addSubview:self.borderImageView];
         [self.borderImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(8);
             make.right.equalTo(self.senderButton.mas_left).offset(-12);
             make.centerY.equalTo(self);
         }];
-        
+
         [self addSubview:self.textField];
         NSString *str = LocalizedString(@"say_something");
         NSAttributedString *attrString = [[NSAttributedString alloc]
-                                          initWithString:str
-                                          attributes:
-                                        @{NSForegroundColorAttributeName :
-                                        [UIColor colorFromRGBHexString:@"#FFFFFF" andAlpha:0.7 * 255]}];
+            initWithString:str
+                attributes:
+                    @{NSForegroundColorAttributeName:
+                          [UIColor colorFromRGBHexString:@"#FFFFFF" andAlpha:0.7 * 255]}];
         _textField.attributedPlaceholder = attrString;
         [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.borderImageView).offset(12);
@@ -76,8 +76,8 @@
     if (self.clickSenderBlock) {
         self.clickSenderBlock(self.textField.text);
     }
-    [self dismiss:^(NSString * _Nonnull text) {
-        
+    [self dismiss:^(NSString *_Nonnull text){
+
     }];
 }
 
@@ -105,7 +105,6 @@
         [_textField setBackgroundColor:[UIColor clearColor]];
         [_textField setTextColor:[UIColor whiteColor]];
         _textField.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
-        
     }
     return _textField;
 }

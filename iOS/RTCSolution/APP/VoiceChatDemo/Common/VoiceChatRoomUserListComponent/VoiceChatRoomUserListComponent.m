@@ -1,11 +1,11 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomUserListComponent.h"
-#import "VoiceChatRoomTopSelectView.h"
 #import "VoiceChatRoomTopSeatView.h"
+#import "VoiceChatRoomTopSelectView.h"
 
 @interface VoiceChatRoomUserListComponent () <VoiceChatRoomTopSelectViewDelegate, VoiceChatRoomRaiseHandListsViewDelegate, VoiceChatRoomAudienceListsViewDelegate>
 
@@ -21,7 +21,6 @@
 @property (nonatomic, assign) BOOL isRed;
 
 @end
-
 
 @implementation VoiceChatRoomUserListComponent
 
@@ -42,13 +41,13 @@
     _seatID = seatID;
     self.dismissBlock = dismissBlock;
     UIViewController *rootVC = [DeviceInforTool topViewController];
-    
+
     [rootVC.view addSubview:self.maskButton];
     [self.maskButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.left.height.equalTo(rootVC.view);
         make.top.equalTo(rootVC.view).offset(SCREEN_HEIGHT);
     }];
-    
+
     [self.maskButton addSubview:self.applyListsView];
     [self.applyListsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
@@ -57,37 +56,37 @@
         make.height.mas_offset(hetight + [DeviceInforTool getVirtualHomeHeight]);
         make.bottom.mas_offset(0);
     }];
-    
+
     [self.maskButton addSubview:self.onlineListsView];
     [self.onlineListsView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.applyListsView);
     }];
-    
+
     [self.maskButton addSubview:self.topSelectView];
     [self.topSelectView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.maskButton);
         make.bottom.equalTo(self.applyListsView.mas_top);
         make.height.mas_equalTo(52);
     }];
-    
+
     [self.maskButton addSubview:self.topSeatView];
     [self.topSeatView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.maskButton);
         make.bottom.equalTo(self.topSelectView.mas_top);
         make.height.mas_equalTo(48);
     }];
-    
+
     // Start animation
     [rootVC.view layoutIfNeeded];
     [self.maskButton.superview setNeedsUpdateConstraints];
     [UIView animateWithDuration:0.25
                      animations:^{
-        [self.maskButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(rootVC.view).offset(0);
-        }];
-        [self.maskButton.superview layoutIfNeeded];
-    }];
-    
+                         [self.maskButton mas_updateConstraints:^(MASConstraintMaker *make) {
+                             make.top.equalTo(rootVC.view).offset(0);
+                         }];
+                         [self.maskButton.superview layoutIfNeeded];
+                     }];
+
     if (_isRed) {
         [self loadDataWithApplyLists];
         [self.topSelectView updateSelectItem:NO];
@@ -99,7 +98,7 @@
         self.onlineListsView.hidden = NO;
         self.applyListsView.hidden = YES;
     }
-    
+
     __weak __typeof(self) wself = self;
     self.topSeatView.clickSwitchBlock = ^(BOOL isOn) {
         [wself loadDataWithSwitch:isOn];
@@ -112,7 +111,6 @@
     } else if (self.applyListsView.superview && !self.applyListsView.hidden) {
         [self loadDataWithApplyLists];
     } else {
-        
     }
 }
 
@@ -126,21 +124,21 @@
 - (void)loadDataWithOnlineLists {
     __weak __typeof(self) wself = self;
     [VoiceChatRTSManager getAudienceList:_roomModel.roomID
-                                          block:^(NSArray<VoiceChatUserModel *> * _Nonnull userLists, RTSACKModel * _Nonnull model) {
-        if (model.result) {
-            wself.onlineListsView.dataLists = userLists;
-        }
-    }];
+                                   block:^(NSArray<VoiceChatUserModel *> *_Nonnull userLists, RTSACKModel *_Nonnull model) {
+                                       if (model.result) {
+                                           wself.onlineListsView.dataLists = userLists;
+                                       }
+                                   }];
 }
 
 - (void)loadDataWithApplyLists {
     __weak __typeof(self) wself = self;
     [VoiceChatRTSManager getApplyAudienceList:_roomModel.roomID
-                                               block:^(NSArray<VoiceChatUserModel *> * _Nonnull userLists, RTSACKModel * _Nonnull model) {
-        if (model.result) {
-            wself.applyListsView.dataLists = userLists;
-        }
-    }];
+                                        block:^(NSArray<VoiceChatUserModel *> *_Nonnull userLists, RTSACKModel *_Nonnull model) {
+                                            if (model.result) {
+                                                wself.applyListsView.dataLists = userLists;
+                                            }
+                                        }];
 }
 
 #pragma mark - VoiceChatRoomTopSelectViewDelegate
@@ -178,14 +176,14 @@
 - (void)loadDataWithSwitch:(BOOL)isOn {
     NSInteger type = isOn ? 1 : 2;
     [VoiceChatRTSManager managerInteractApply:self.roomModel.roomID
-                                                type:type
-                                               block:^(RTSACKModel * _Nonnull model) {
-        if (!model.result) {
-            [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_please_try_again")];
-            [[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSeatSwitch object:@(!isOn)];
-        }
-        [[NSNotificationCenter defaultCenter] postNotificationName:NotificationResultSeatSwitch object:nil];
-    }];
+                                         type:type
+                                        block:^(RTSACKModel *_Nonnull model) {
+                                            if (!model.result) {
+                                                [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_please_try_again")];
+                                                [[NSNotificationCenter defaultCenter] postNotificationName:NotificationUpdateSeatSwitch object:@(!isOn)];
+                                            }
+                                            [[NSNotificationCenter defaultCenter] postNotificationName:NotificationResultSeatSwitch object:nil];
+                                        }];
 }
 
 - (void)clickTableViewWithModel:(VoiceChatUserModel *)userModel dataLists:(NSArray<VoiceChatUserModel *> *)dataLists {
@@ -195,31 +193,30 @@
         [VoiceChatRTSManager inviteInteract:userModel.roomID
                                         uid:userModel.uid
                                      seatID:_seatID
-                                      block:^(RTSACKModel * _Nonnull model) {
-            [[ToastComponent shareToastComponent] dismiss];
-            if (!model.result) {
-                [[ToastComponent shareToastComponent] showWithMessage:model.message];
-            } else {
-                [wself update];
-                [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"Invitation_has_been_sent_to_the_audience")];
-            }
-        }];
+                                      block:^(RTSACKModel *_Nonnull model) {
+                                          [[ToastComponent shareToastComponent] dismiss];
+                                          if (!model.result) {
+                                              [[ToastComponent shareToastComponent] showWithMessage:model.message];
+                                          } else {
+                                              [wself update];
+                                              [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"Invitation_has_been_sent_to_the_audience")];
+                                          }
+                                      }];
     } else if (userModel.status == UserStatusApply) {
-        __weak __typeof(self)wself = self;
+        __weak __typeof(self) wself = self;
         [[ToastComponent shareToastComponent] showLoading];
         [VoiceChatRTSManager agreeApply:userModel.roomID
-                                           uid:userModel.uid
-                                         block:^(RTSACKModel * _Nonnull model) {
-            [[ToastComponent shareToastComponent] dismiss];
-            if (model.result) {
-                userModel.status = UserStatusApply;
-                [wself updateDataLists:dataLists model:userModel];
-            } else {
-                [[ToastComponent shareToastComponent] showWithMessage:model.message];
-            }
-        }];
+                                    uid:userModel.uid
+                                  block:^(RTSACKModel *_Nonnull model) {
+                                      [[ToastComponent shareToastComponent] dismiss];
+                                      if (model.result) {
+                                          userModel.status = UserStatusApply;
+                                          [wself updateDataLists:dataLists model:userModel];
+                                      } else {
+                                          [[ToastComponent shareToastComponent] showWithMessage:model.message];
+                                      }
+                                  }];
     } else {
-        
     }
 }
 
@@ -311,7 +308,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc %@",NSStringFromClass([self class]));
+    NSLog(@"dealloc %@", NSStringFromClass([self class]));
 }
 
 @end

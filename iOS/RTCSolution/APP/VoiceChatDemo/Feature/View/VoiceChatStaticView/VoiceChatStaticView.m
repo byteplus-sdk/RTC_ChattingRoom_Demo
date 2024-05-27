@@ -1,12 +1,12 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatStaticView.h"
 #import "VoiceChatPeopleNumView.h"
-#import "VoiceChatRoomParamInfoView.h"
 #import "VoiceChatRTSManager.h"
+#import "VoiceChatRoomParamInfoView.h"
 
 @interface VoiceChatStaticView ()
 
@@ -26,20 +26,20 @@
         [self.bgImageImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
         }];
-        
+
         [self addSubview:self.peopleNumView];
         [self.peopleNumView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(32);
             make.right.equalTo(self).offset(-16);
             make.top.equalTo(self).offset([DeviceInforTool getStatusBarHight] + 16);
         }];
-        
+
         [self addSubview:self.roomTitleLabel];
         [self.roomTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(16);
             make.top.mas_equalTo([DeviceInforTool getStatusBarHight] + 8);
         }];
-        
+
         [self addSubview:self.paramInfoView];
         [self.paramInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(16);
@@ -55,7 +55,7 @@
 
 - (void)setRoomModel:(VoiceChatRoomModel *)roomModel {
     _roomModel = roomModel;
-    
+
     self.roomTitleLabel.text = roomModel.roomName;
     NSString *bgImageName = roomModel.extDic[@"background_image_name"];
     self.bgImageImageView.image = [UIImage imageNamed:bgImageName];

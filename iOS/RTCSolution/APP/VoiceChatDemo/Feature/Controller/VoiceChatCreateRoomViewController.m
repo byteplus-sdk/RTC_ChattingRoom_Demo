@@ -1,11 +1,11 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatCreateRoomViewController.h"
-#import "VoiceChatRoomViewController.h"
 #import "VoiceChatCreateRoomTipView.h"
+#import "VoiceChatRoomViewController.h"
 #import "VoiceChatSelectBgView.h"
 
 @interface VoiceChatCreateRoomViewController ()
@@ -29,10 +29,10 @@
     [self addSubviewAndConstraints];
     self.bgImageView.image = [UIImage imageNamed:[self.selectBgView getDefaults]];
     _bgImageName = [self.selectBgView getDefaults];
-    
+
     __weak __typeof(self) wself = self;
-    self.selectBgView.clickBlock = ^(NSString * _Nonnull imageName,
-                                     NSString * _Nonnull smallImageName) {
+    self.selectBgView.clickBlock = ^(NSString *_Nonnull imageName,
+                                     NSString *_Nonnull smallImageName) {
         wself.bgImageView.image = [UIImage imageNamed:imageName];
         wself.bgImageName = imageName;
     };
@@ -40,7 +40,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     self.navTitle = @"";
     self.navLeftImage = [UIImage imageNamed:@"voice_cancel" bundleName:HomeBundleName];
 }
@@ -49,23 +49,23 @@
     [[ToastComponent shareToastComponent] showLoading];
     __weak __typeof(self) wself = self;
     [VoiceChatRTSManager startLive:self.roomNameLabel.text
-                                 userName:[LocalUserComponent userModel].name
-                              bgImageName:_bgImageName
-                                    block:^(NSString * _Nonnull RTCToken,
-                                            VoiceChatRoomModel * _Nonnull roomModel,
-                                            VoiceChatUserModel * _Nonnull hostUserModel,
-                                            RTSACKModel * _Nonnull model) {
-        if (model.result) {
-            VoiceChatRoomViewController *next = [[VoiceChatRoomViewController alloc]
-                                                 initWithRoomModel:roomModel
-                                                 rtcToken:RTCToken
-                                                 hostUserModel:hostUserModel];
-            [wself.navigationController pushViewController:next animated:YES];
-        } else {
-            [[ToastComponent shareToastComponent] showWithMessage:model.message];
-        }
-        [[ToastComponent shareToastComponent] dismiss];
-    }];
+                          userName:[LocalUserComponent userModel].name
+                       bgImageName:_bgImageName
+                             block:^(NSString *_Nonnull RTCToken,
+                                     VoiceChatRoomModel *_Nonnull roomModel,
+                                     VoiceChatUserModel *_Nonnull hostUserModel,
+                                     RTSACKModel *_Nonnull model) {
+                                 if (model.result) {
+                                     VoiceChatRoomViewController *next = [[VoiceChatRoomViewController alloc]
+                                         initWithRoomModel:roomModel
+                                                  rtcToken:RTCToken
+                                             hostUserModel:hostUserModel];
+                                     [wself.navigationController pushViewController:next animated:YES];
+                                 } else {
+                                     [[ToastComponent shareToastComponent] showWithMessage:model.message];
+                                 }
+                                 [[ToastComponent shareToastComponent] dismiss];
+                             }];
 }
 
 #pragma mark - Private Action
@@ -75,34 +75,34 @@
     [self.bgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    
+
     [self.view bringSubviewToFront:self.navView];
     self.navView.backgroundColor = [UIColor clearColor];
-    
+
     [self.view addSubview:self.tipView];
     [self.tipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.left.mas_equalTo(0);
         make.top.equalTo(self.navView.mas_bottom).offset(8);
     }];
-    
+
     [self.view addSubview:self.roomTitleLabel];
     [self.roomTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(30);
         make.top.equalTo(self.navView.mas_bottom).offset(86);
     }];
-    
+
     [self.view addSubview:self.roomNameLabel];
     [self.roomNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.roomTitleLabel);
         make.top.equalTo(self.roomTitleLabel.mas_bottom).offset(12);
     }];
-    
+
     [self.view addSubview:self.bgTitleLabel];
     [self.bgTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.roomTitleLabel);
         make.top.equalTo(self.roomNameLabel.mas_bottom).offset(24);
     }];
-    
+
     CGFloat selectBgViewHeight = ((SCREEN_WIDTH - (30 * 2)) - (12 * 2)) / 3;
     [self.view addSubview:self.selectBgView];
     [self.selectBgView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -111,7 +111,7 @@
         make.height.mas_equalTo(selectBgViewHeight);
         make.top.equalTo(self.bgTitleLabel.mas_bottom).offset(12);
     }];
-    
+
     [self.view addSubview:self.joinButton];
     [self.joinButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(30);
@@ -188,10 +188,9 @@
     if (!_tipView) {
         _tipView = [[VoiceChatCreateRoomTipView alloc] init];
         _tipView.message =
-        [NSString stringWithFormat:LocalizedString(@"application_experiencing_%@_title"), @"20"]; 
+            [NSString stringWithFormat:LocalizedString(@"application_experiencing_%@_title"), @"20"];
     }
     return _tipView;
 }
-
 
 @end

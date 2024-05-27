@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomParamInfoView.h"
 #import "UIView+Fillet.h"
@@ -18,7 +18,7 @@
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
-        
+
         [self addSubview:self.messageLabel];
         [self.messageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
@@ -29,16 +29,14 @@
 
 #pragma mark - Publish Action
 
-
 - (void)setParamInfoModel:(VoiceChatRoomParamInfoModel *)paramInfoModel {
     _paramInfoModel = paramInfoModel;
-    
+
     if (IsEmptyStr(paramInfoModel.rtt)) {
         paramInfoModel.rtt = @"0";
     }
     NSString *noticeStr = LocalizedString(@"delay");
-    self.messageLabel.text = [NSString stringWithFormat:@"%@ %@ms",noticeStr,
-                              paramInfoModel.rtt];
+    self.messageLabel.text = [NSString stringWithFormat:@"%@ %@ms", noticeStr, paramInfoModel.rtt];
 }
 
 #pragma mark - Private Action

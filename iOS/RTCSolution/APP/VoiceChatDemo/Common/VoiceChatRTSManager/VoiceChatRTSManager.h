@@ -1,14 +1,14 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
-#import <Foundation/Foundation.h>
-#import "VoiceChatUserModel.h"
-#import "VoiceChatRoomModel.h"
-#import "VoiceChatSeatModel.h"
-#import "VoiceChatRoomParamInfoModel.h"
 #import "RTSACKModel.h"
+#import "VoiceChatRoomModel.h"
+#import "VoiceChatRoomParamInfoModel.h"
+#import "VoiceChatSeatModel.h"
+#import "VoiceChatUserModel.h"
+#import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,7 +29,6 @@ NS_ASSUME_NONNULL_BEGIN
                             VoiceChatUserModel *hostUserModel,
                             RTSACKModel *model))block;
 
-
 /// Get the list of audience in the room
 /// @param roomID Room ID
 /// @param block Callback
@@ -37,14 +36,12 @@ NS_ASSUME_NONNULL_BEGIN
                   block:(void (^)(NSArray<VoiceChatUserModel *> *userLists,
                                   RTSACKModel *model))block;
 
-
 /// Get the list of audiences applied for in the room
 /// @param roomID Room ID
 /// @param block Callback
 + (void)getApplyAudienceList:(NSString *)roomID
                        block:(void (^)(NSArray<VoiceChatUserModel *> *userLists,
                                        RTSACKModel *model))block;
-
 
 /// The anchor invites the audience to come on stage
 /// @param roomID Room ID
@@ -56,7 +53,6 @@ NS_ASSUME_NONNULL_BEGIN
                 seatID:(NSString *)seatID
                  block:(void (^)(RTSACKModel *model))block;
 
-
 /// The anchor agrees to the audience's application
 /// @param roomID Room ID
 /// @param uid User ID
@@ -65,8 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
                uid:(NSString *)uid
              block:(void (^)(RTSACKModel *model))block;
 
-
-
 /// Whether the host switch is turned on to apply
 /// @param roomID Room ID
 /// @param type 1 open, other close
@@ -74,7 +68,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)managerInteractApply:(NSString *)roomID
                         type:(NSInteger)type
                        block:(void (^)(RTSACKModel *model))block;
-
 
 /// Host management Shangmai guests
 /// @param roomID Room ID
@@ -86,15 +79,11 @@ NS_ASSUME_NONNULL_BEGIN
                type:(NSInteger)type
               block:(void (^)(RTSACKModel *model))block;
 
-
-
 /// The host ends the live broadcast
 /// @param roomID Room ID
 + (void)finishLive:(NSString *)roomID;
 
-
 #pragma mark - Audience API
-
 
 /// The audience joins the room
 /// @param roomID Room ID
@@ -109,9 +98,6 @@ NS_ASSUME_NONNULL_BEGIN
                                NSArray<VoiceChatSeatModel *> *seatList,
                                RTSACKModel *model))block;
 
-
-
-
 /// Reply to the host’s invitation
 /// @param roomID Room ID
 /// @param reply 1 accept, 2 Refuse
@@ -120,15 +106,13 @@ NS_ASSUME_NONNULL_BEGIN
               reply:(NSInteger)reply
               block:(void (^)(RTSACKModel *model))block;
 
-
 /// Distinguished guests
 /// @param roomID Room ID
 /// @param seatID Seat ID
 /// @param block Callback
 + (void)finishInteract:(NSString *)roomID
                 seatID:(NSString *)seatID
-                block:(void (^)(RTSACKModel *model))block;
-
+                 block:(void (^)(RTSACKModel *model))block;
 
 /// Audience application on stage
 /// @param roomID Room ID
@@ -139,25 +123,20 @@ NS_ASSUME_NONNULL_BEGIN
                 block:(void (^)(BOOL isNeedApply,
                                 RTSACKModel *model))block;
 
-
 /// The audience leaves the room
 /// @param roomID Room ID
 + (void)leaveLiveRoom:(NSString *)roomID;
 
-
 #pragma mark - Publish API
-
 
 /// Received the audience
 /// @param block Callback
 + (void)getActiveLiveRoomListWithBlock:(void (^)(NSArray<VoiceChatRoomModel *> *roomList,
                                                  RTSACKModel *model))block;
 
-
 /// Mutual kick notification
 /// @param block Callback
 + (void)clearUser:(void (^)(RTSACKModel *model))block;
-
 
 /// Send IM message
 /// @param roomID Room ID
@@ -167,7 +146,6 @@ NS_ASSUME_NONNULL_BEGIN
             message:(NSString *)message
               block:(void (^)(RTSACKModel *model))block;
 
-
 /// Update microphone status
 /// @param roomID Room ID
 /// @param mic 0 close ,1 open
@@ -175,8 +153,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)updateMediaStatus:(NSString *)roomID
                       mic:(NSInteger)mic
                     block:(void (^)(RTSACKModel *model))block;
-
-
 
 /// reconnect
 /// @param block Callback
@@ -187,33 +163,26 @@ NS_ASSUME_NONNULL_BEGIN
                                      NSArray<VoiceChatSeatModel *> *seatList,
                                      RTSACKModel *model))block;
 
-
-
 #pragma mark - Notification Message
-
 
 /// The audience joins the room
 /// @param block Callback
 + (void)onAudienceJoinRoomWithBlock:(void (^)(VoiceChatUserModel *userModel,
                                               NSInteger count))block;
 
-
 /// The audience leaves the room
 /// @param block Callback
 + (void)onAudienceLeaveRoomWithBlock:(void (^)(VoiceChatUserModel *userModel,
                                                NSInteger count))block;
 
-
 /// Received the end of the live broadcast room
 /// @param block Callback
 + (void)onFinishLiveWithBlock:(void (^)(NSString *rommID, NSInteger type))block;
-
 
 /// Successful audience
 /// @param block Callback
 + (void)onJoinInteractWithBlock:(void (^)(VoiceChatUserModel *userModel,
                                           NSString *seatID))block;
-
 
 /// Distinguished guests
 /// @param block Callback
@@ -221,12 +190,10 @@ NS_ASSUME_NONNULL_BEGIN
                                             NSString *seatID,
                                             NSInteger type))block;
 
-
 /// Seat status changes
 /// @param block Callback
 + (void)onSeatStatusChangeWithBlock:(void (^)(NSString *seatID,
                                               NSInteger type))block;
-
 
 /// Microphone status changes
 /// @param block Callback
@@ -234,15 +201,12 @@ NS_ASSUME_NONNULL_BEGIN
                                                NSString *seatID,
                                                NSInteger mic))block;
 
-
 /// IM message received
 /// @param block Callback
 + (void)onMessageWithBlock:(void (^)(VoiceChatUserModel *userModel,
                                      NSString *message))block;
 
-
 #pragma mark - Single Notification Message
-
 
 /// Received an invitation
 /// @param block Callback
@@ -254,7 +218,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)onApplyInteractWithBlock:(void (^)(VoiceChatUserModel *userModel,
                                            NSString *seatID))block;
 
-
 /// Receipt of invitation result
 /// @param block Callback
 + (void)onInviteResultWithBlock:(void (^)(VoiceChatUserModel *userModel,
@@ -263,7 +226,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// Receive guest/host microphone changes
 /// @param block Callback
 + (void)onMediaOperateWithBlock:(void (^)(NSInteger mic))block;
-
 
 /// Received mutual kick notification
 /// @param block Callback

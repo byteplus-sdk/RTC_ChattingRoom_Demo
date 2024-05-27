@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRTCManager.h"
 
@@ -53,12 +53,12 @@
     // Join the room, start connecting the microphone, you need to apply for AppId and Token
     ByteRTCUserInfo *userInfo = [[ByteRTCUserInfo alloc] init];
     userInfo.userId = uid;
-    
+
     ByteRTCRoomConfig *config = [[ByteRTCRoomConfig alloc] init];
     config.profile = ByteRTCRoomProfileInteractivePodcast;
     config.isAutoPublish = YES;
     config.isAutoSubscribeAudio = YES;
-    
+
     [self.rtcRoom joinRoom:token userInfo:userInfo roomConfig:config];
 }
 
@@ -76,13 +76,13 @@
     if (isGuest) {
         [SystemAuthority authorizationStatusWithType:AuthorizationTypeAudio
                                                block:^(BOOL isAuthorize) {
-            if (isAuthorize) {
-                [self.rtcEngineKit startAudioCapture];
-                [self.rtcRoom setUserVisibility:YES];
-                [self publishAudioStream:YES];
-                self.isEnableAudioCapture = YES;
-            }
-        }];
+                                                   if (isAuthorize) {
+                                                       [self.rtcEngineKit startAudioCapture];
+                                                       [self.rtcRoom setUserVisibility:YES];
+                                                       [self publishAudioStream:YES];
+                                                       self.isEnableAudioCapture = YES;
+                                                   }
+                                               }];
     } else {
         [self.rtcEngineKit stopAudioCapture];
         [self.rtcRoom setUserVisibility:NO];
@@ -104,7 +104,7 @@
 - (void)startBackgroundMusic:(NSString *)filePath {
     // Start background music mixing
     ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
-    
+
     ByteRTCAudioEffectPlayerConfig *config = [[ByteRTCAudioEffectPlayerConfig alloc] init];
     config.type = ByteRTCAudioMixingTypePlayoutAndPublish;
     config.playCount = -1;
@@ -120,14 +120,14 @@
 - (void)pauseBackgroundMusic {
     // Pause background music mixing
     ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
-    
+
     [audioMixingManager pause:_audioMixingID];
 }
 
 - (void)resumeBackgroundMusic {
     // Continue background music mixing
     ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
-    
+
     [audioMixingManager resume:_audioMixingID];
 }
 
@@ -139,18 +139,18 @@
 - (void)setMusicVolume:(NSInteger)volume {
     // Set the volume of the mixed music
     ByteRTCAudioEffectPlayer *audioMixingManager = [self.rtcEngineKit getAudioEffectPlayer];
-    
+
     [audioMixingManager setVolume:_audioMixingID volume:(int)volume];
 }
 
 #pragma mark - ByteRTCRoomDelegate
 
 - (void)rtcRoom:(ByteRTCRoom *)rtcRoom onRoomStateChanged:(NSString *)roomId
-        withUid:(NSString *)uid
-          state:(NSInteger)state
-      extraInfo:(NSString *)extraInfo {
+               withUid:(NSString *)uid
+                 state:(NSInteger)state
+             extraInfo:(NSString *)extraInfo {
     [super rtcRoom:rtcRoom onRoomStateChanged:roomId withUid:uid state:state extraInfo:extraInfo];
-    
+
     dispatch_queue_async_safe(dispatch_get_main_queue(), ^{
         RTCJoinModel *joinModel = [RTCJoinModel modelArrayWithClass:extraInfo state:state roomId:roomId];
         if ([self.delegate respondsToSelector:@selector(voiceChatRTCManager:onRoomStateChanged:)]) {
@@ -163,9 +163,9 @@
 
 - (void)rtcRoom:(ByteRTCRoom *)rtcRoom onNetworkQuality:(ByteRTCNetworkQualityStats *)localQuality remoteQualities:(NSArray<ByteRTCNetworkQualityStats *> *)remoteQualities {
     if (self.isEnableAudioCapture) {
-        self.paramInfoModel.rtt = [NSString stringWithFormat:@"%.0ld",(long)localQuality.rtt];
+        self.paramInfoModel.rtt = [NSString stringWithFormat:@"%.0ld", (long)localQuality.rtt];
     } else {
-        self.paramInfoModel.rtt = [NSString stringWithFormat:@"%.0ld",(long)remoteQualities.firstObject.rtt];
+        self.paramInfoModel.rtt = [NSString stringWithFormat:@"%.0ld", (long)remoteQualities.firstObject.rtt];
     }
     // Downlink network quality score
     self.paramInfoModel.rxQuality = localQuality.rxQuality;
@@ -208,7 +208,6 @@
         }
     });
 }
-
 
 #pragma mark - Getter
 

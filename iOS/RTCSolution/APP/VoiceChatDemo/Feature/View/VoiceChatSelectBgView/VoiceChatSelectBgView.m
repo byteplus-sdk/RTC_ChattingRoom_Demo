@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatSelectBgView.h"
 #import "VoiceChatSelectBgItemView.h"
@@ -27,7 +27,7 @@
         [self.list mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.bottom.equalTo(self);
         }];
-        
+
         VoiceChatSelectBgItemView *itemView = self.list.firstObject;
         itemView.isSelected = YES;
     }

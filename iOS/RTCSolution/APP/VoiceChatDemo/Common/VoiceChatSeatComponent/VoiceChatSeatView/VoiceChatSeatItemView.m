@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatSeatItemView.h"
 
@@ -35,36 +35,36 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
         [self addSubview:self.userNameLabel];
         [self addSubview:self.maskView];
         [self addSubview:self.centerImageView];
-        
+
         [self.avatarBgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(52, 52));
             make.top.mas_equalTo(5);
             make.centerX.equalTo(self);
         }];
-        
+
         [self.maskView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.avatarBgImageView);
         }];
-        
+
         [self.animationView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(self.avatarBgImageView);
             make.width.height.mas_equalTo(62);
         }];
-        
+
         [self.avatarLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(self.avatarBgImageView);
         }];
-        
+
         [self.userNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.bottom.equalTo(self);
             make.width.lessThanOrEqualTo(self.mas_width);
         }];
-        
+
         [self.centerImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.size.mas_equalTo(CGSizeMake(20, 20));
             make.center.equalTo(self.avatarBgImageView);
         }];
-        
+
         self.userInteractionEnabled = YES;
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
         [self addGestureRecognizer:tap];
@@ -76,7 +76,7 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
     _seatModel = seatModel;
     if (seatModel) {
         if (seatModel.status == 1) {
-            //unlock
+            // unlock
             if (NOEmptyStr(seatModel.userModel.uid)) {
                 if (seatModel.userModel.mic == UserMicOn) {
                     if (seatModel.userModel.isSpeak) {
@@ -91,7 +91,7 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
                 [self updateUI:VoiceChatSeatItemStatueNull seatModel:seatModel];
             }
         } else {
-            //lock
+            // lock
             [self updateUI:VoiceChatSeatItemStatueLock seatModel:seatModel];
         }
     } else {
@@ -103,14 +103,14 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
        seatModel:(VoiceChatSeatModel *)seatModel {
     self.animationView.hidden = YES;
     self.maskView.hidden = YES;
-    
+
     if (statue == VoiceChatSeatItemStatueNull) {
         self.avatarBgImageView.image = nil;
         self.avatarBgImageView.backgroundColor = [UIColor colorFromRGBHexString:@"#FFFFFF" andAlpha:0.3 * 255];
         self.centerImageView.image = [UIImage imageNamed:@"voicechat_seat_null" bundleName:HomeBundleName];
         self.centerImageView.hidden = NO;
         self.avatarLabel.text = @"";
-        NSString *indexStr = [NSString stringWithFormat:@"%ld",seatModel.index];
+        NSString *indexStr = [NSString stringWithFormat:@"%ld", seatModel.index];
         self.userNameLabel.text = [NSString stringWithFormat:LocalizedString(@"%@_mic_location"), indexStr];
     } else if (statue == VoiceChatSeatItemStatueLock) {
         self.avatarBgImageView.image = nil;
@@ -118,8 +118,8 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
         self.centerImageView.image = [UIImage imageNamed:@"voicechat_seat_lock" bundleName:HomeBundleName];
         self.centerImageView.hidden = NO;
         self.avatarLabel.text = @"";
-        NSString *indexStr = [NSString stringWithFormat:@"%ld",seatModel.index];
-        self.userNameLabel.text = [NSString stringWithFormat:LocalizedString(@"%@_mic_location"),indexStr];
+        NSString *indexStr = [NSString stringWithFormat:@"%ld", seatModel.index];
+        self.userNameLabel.text = [NSString stringWithFormat:LocalizedString(@"%@_mic_location"), indexStr];
     } else if (statue == VoiceChatSeatItemStatueUser) {
         self.avatarBgImageView.backgroundColor = [UIColor clearColor];
         self.avatarBgImageView.image = [UIImage imageNamed:@"voicechat_small_bg" bundleName:HomeBundleName];
@@ -132,7 +132,7 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
         self.avatarLabel.text = [seatModel.userModel.name substringToIndex:1];
         self.centerImageView.hidden = YES;
         self.userNameLabel.text = seatModel.userModel.name;
-        
+
         self.animationView.hidden = NO;
     } else if (statue == VoiceChatSeatItemStatueMuteMic) {
         self.avatarBgImageView.backgroundColor = [UIColor clearColor];
@@ -144,7 +144,7 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
         self.centerImageView.hidden = NO;
         self.maskView.hidden = NO;
     } else {
-        //error
+        // error
     }
 }
 
@@ -158,13 +158,13 @@ typedef NS_ENUM(NSInteger, VoiceChatSeatItemStatue) {
     CAKeyframeAnimation *animation = [CAKeyframeAnimation animationWithKeyPath:@"transform.scale"];
     animation.values = @[@(0.81), @(1.0), @(1.0)];
     animation.keyTimes = @[@(0), @(0.27), @(1.0)];
-    
+
     CAKeyframeAnimation *animation2 = [CAKeyframeAnimation animationWithKeyPath:@"opacity"];
     animation2.values = @[@(0), @(0.2), @(0.4), @(0.2)];
     animation2.keyTimes = @[@(0), @(0.27), @(0.27), @(1.0)];
-    
+
     CAAnimationGroup *group = [CAAnimationGroup animation];
-    group.animations = @[animation,animation2];
+    group.animations = @[animation, animation2];
     group.duration = 1.1;
     group.repeatCount = MAXFLOAT;
     group.removedOnCompletion = NO;

@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "BaseRTCManager.h"
 #import "VoiceChatRTCManager.h"
@@ -17,8 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param userID UserID
  */
 - (void)voiceChatRTCManager:(VoiceChatRTCManager *)manager
-    onRoomStateChanged:(RTCJoinModel *)joinModel;
-
+         onRoomStateChanged:(RTCJoinModel *)joinModel;
 
 /**
  * @brief Audio quality status callback
@@ -70,7 +69,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @param isPublish ture: Send, false：Not send
  */
 - (void)publishAudioStream:(BOOL)isPublish;
-
 
 #pragma mark - Background Music Method
 

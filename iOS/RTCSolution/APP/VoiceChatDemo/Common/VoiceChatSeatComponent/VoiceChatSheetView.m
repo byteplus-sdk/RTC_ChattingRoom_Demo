@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatSheetView.h"
 
@@ -23,13 +23,13 @@
             make.width.left.height.equalTo(self);
             make.top.equalTo(self).offset(SCREEN_HEIGHT);
         }];
-        
+
         [self.maskButton addSubview:self.contentView];
         [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.equalTo(self.maskButton);
             make.height.mas_equalTo(108 + [DeviceInforTool getVirtualHomeHeight]);
         }];
-        
+
         for (int i = 0; i < 3; i++) {
             VoiceChatSeatItemButton *button = [[VoiceChatSeatItemButton alloc] init];
             [button addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -54,7 +54,7 @@
            loginUserModel:(VoiceChatUserModel *)loginUserModel {
     _seatModel = seatModel;
     _loginUserModel = loginUserModel;
-    
+
     NSArray *statusList = [self getSheetListWithModel:seatModel
                                        loginUserModel:loginUserModel];
     if (statusList.count <= 0) {
@@ -66,14 +66,14 @@
     [self.maskButton.superview setNeedsUpdateConstraints];
     [UIView animateWithDuration:0.25
                      animations:^{
-        [self.maskButton mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self).offset(0);
-        }];
-        [self.maskButton.superview layoutIfNeeded];
-    }];
+                         [self.maskButton mas_updateConstraints:^(MASConstraintMaker *make) {
+                             make.top.equalTo(self).offset(0);
+                         }];
+                         [self.maskButton.superview layoutIfNeeded];
+                     }];
     CGFloat num = statusList.count;
     CGFloat itemWidth = SCREEN_WIDTH / num;
-    
+
     NSMutableArray *list = [[NSMutableArray alloc] init];
     for (int i = 0; i < self.buttonList.count; i++) {
         VoiceChatSeatItemButton *button = self.buttonList[i];
@@ -99,8 +99,8 @@
             make.centerX.equalTo(self.contentView);
         }];
     } else {
-        [list mas_remakeConstraints:^(MASConstraintMaker *make) {
-                
+        [list mas_remakeConstraints:^(MASConstraintMaker *make){
+
         }];
         [list mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedItemLength:itemWidth leadSpacing:0 tailSpacing:0];
         [list mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -113,7 +113,7 @@
 - (void)dismiss {
     [self.maskButton removeFromSuperview];
     self.maskButton = nil;
-    
+
     [self removeFromSuperview];
 }
 
@@ -272,7 +272,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc %@",NSStringFromClass([self class]));
+    NSLog(@"dealloc %@", NSStringFromClass([self class]));
 }
 
 @end

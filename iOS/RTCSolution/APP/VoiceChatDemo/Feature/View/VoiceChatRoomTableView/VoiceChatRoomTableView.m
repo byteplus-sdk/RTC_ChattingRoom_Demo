@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomTableView.h"
 #import "VoiceChatEmptyView.h"
@@ -13,13 +13,11 @@
 
 @end
 
-
 @implementation VoiceChatRoomTableView
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        
         [self addSubview:self.roomTableView];
         [self.roomTableView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
@@ -32,7 +30,7 @@
 
 - (void)setDataLists:(NSArray *)dataLists {
     _dataLists = dataLists;
-    
+
     [self.roomTableView reloadData];
     if (dataLists.count <= 0) {
         [self.emptyComponent show];
@@ -40,7 +38,6 @@
         [self.emptyComponent dismiss];
     }
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     VoiceChatRoomCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VoiceChatRoomCellID" forIndexPath:indexPath];
@@ -63,9 +60,7 @@
     return self.dataLists.count;
 }
 
-
 #pragma mark - Getter
-
 
 - (UITableView *)roomTableView {
     if (!_roomTableView) {
@@ -84,7 +79,7 @@
 - (VoiceChatEmptyView *)emptyComponent {
     if (!_emptyComponent) {
         _emptyComponent = [[VoiceChatEmptyView alloc] initWithView:self
-                                                                  message:LocalizedString(@"noone_has_created_a_chatroom")];
+                                                           message:LocalizedString(@"noone_has_created_a_chatroom")];
     }
     return _emptyComponent;
 }

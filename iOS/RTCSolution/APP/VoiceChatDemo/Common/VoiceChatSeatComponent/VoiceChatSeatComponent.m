@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatSeatComponent.h"
 #import "VoiceChatSeatView.h"
@@ -30,7 +30,7 @@
 - (void)showSeatView:(NSArray<VoiceChatSeatModel *> *)seatList
       loginUserModel:(VoiceChatUserModel *)loginUserModel {
     _loginUserModel = loginUserModel;
-    
+
     if (!_seatView) {
         VoiceChatSeatView *seatView = [[VoiceChatSeatView alloc] init];
         [_superView addSubview:seatView];
@@ -43,9 +43,9 @@
         _seatView = seatView;
     }
     _seatView.seatList = seatList;
-    
+
     __weak __typeof(self) wself = self;
-    _seatView.clickBlock = ^(VoiceChatSeatModel * _Nonnull seatModel) {
+    _seatView.clickBlock = ^(VoiceChatSeatModel *_Nonnull seatModel) {
         VoiceChatSheetView *sheetView = [[VoiceChatSheetView alloc] init];
         sheetView.delegate = wself;
         [wself.superView addSubview:sheetView];
@@ -99,10 +99,10 @@
                clickButton:(VoiceChatSheetStatus)sheetState {
     if (sheetState == VoiceChatSheetStatusInvite) {
         if ([self.delegate respondsToSelector:@selector
-             (voiceChatSeatComponent:clickButton:sheetStatus:)]) {
+                           (voiceChatSeatComponent:clickButton:sheetStatus:)]) {
             [self.delegate voiceChatSeatComponent:self
-                                       clickButton:voiceChatSheetView.seatModel
-                                       sheetStatus:sheetState];
+                                      clickButton:voiceChatSheetView.seatModel
+                                      sheetStatus:sheetState];
         }
         [voiceChatSheetView dismiss];
     } else if (sheetState == VoiceChatSheetStatusKick) {
@@ -120,7 +120,7 @@
     } else if (sheetState == VoiceChatSheetStatusLeave) {
         [self loadDataLeave:voiceChatSheetView];
     } else {
-        //error
+        // error
     }
 }
 
@@ -131,51 +131,51 @@
     NSString *seatID = [NSString stringWithFormat:@"%ld", (long)voiceChatSheetView.seatModel.index];
     [[ToastComponent shareToastComponent] showLoading];
     [VoiceChatRTSManager managerSeat:voiceChatSheetView.loginUserModel.roomID
-                                     seatID:seatID
-                                       type:type
-                                      block:^(RTSACKModel * _Nonnull model) {
-        [[ToastComponent shareToastComponent] dismiss];
-        if (!model.result) {
-            [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_please_try_again")];
-        } else {
-            [voiceChatSheetView dismiss];
-        }
-    }];
+                              seatID:seatID
+                                type:type
+                               block:^(RTSACKModel *_Nonnull model) {
+                                   [[ToastComponent shareToastComponent] dismiss];
+                                   if (!model.result) {
+                                       [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_please_try_again")];
+                                   } else {
+                                       [voiceChatSheetView dismiss];
+                                   }
+                               }];
 }
 
 - (void)loadDataApply:(VoiceChatSheetView *)voiceChatSheetView {
     NSString *seatID = [NSString stringWithFormat:@"%ld", (long)voiceChatSheetView.seatModel.index];
     [[ToastComponent shareToastComponent] showLoading];
     [VoiceChatRTSManager applyInteract:voiceChatSheetView.loginUserModel.roomID
-                                       seatID:seatID
-                                        block:^(BOOL isNeedApply,
-                                                RTSACKModel * _Nonnull model) {
-        [[ToastComponent shareToastComponent] dismiss];
-        if (!model.result) {
-            [[ToastComponent shareToastComponent] showWithMessage:model.message];
-        } else {
-            if (isNeedApply) {
-                voiceChatSheetView.loginUserModel.status = UserStatusApply;
-                [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"application_has_been_sent_to_the_host")];
-            }
-            [voiceChatSheetView dismiss];
-        }
-    }];
+                                seatID:seatID
+                                 block:^(BOOL isNeedApply,
+                                         RTSACKModel *_Nonnull model) {
+                                     [[ToastComponent shareToastComponent] dismiss];
+                                     if (!model.result) {
+                                         [[ToastComponent shareToastComponent] showWithMessage:model.message];
+                                     } else {
+                                         if (isNeedApply) {
+                                             voiceChatSheetView.loginUserModel.status = UserStatusApply;
+                                             [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"application_has_been_sent_to_the_host")];
+                                         }
+                                         [voiceChatSheetView dismiss];
+                                     }
+                                 }];
 }
 
 - (void)loadDataLeave:(VoiceChatSheetView *)voiceChatSheetView {
     NSString *seatID = [NSString stringWithFormat:@"%ld", (long)voiceChatSheetView.seatModel.index];
     [[ToastComponent shareToastComponent] showLoading];
     [VoiceChatRTSManager finishInteract:voiceChatSheetView.loginUserModel.roomID
-                                        seatID:seatID
-                                         block:^(RTSACKModel * _Nonnull model) {
-        [[ToastComponent shareToastComponent] dismiss];
-        if (!model.result) {
-            [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_please_try_again")];
-        } else {
-            [voiceChatSheetView dismiss];
-        }
-    }];
+                                 seatID:seatID
+                                  block:^(RTSACKModel *_Nonnull model) {
+                                      [[ToastComponent shareToastComponent] dismiss];
+                                      if (!model.result) {
+                                          [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_please_try_again")];
+                                      } else {
+                                          [voiceChatSheetView dismiss];
+                                      }
+                                  }];
 }
 
 - (void)showAlertWithLockSeat:(VoiceChatSheetView *)voiceChatSheetView {
@@ -183,7 +183,7 @@
     alertModel.title = LocalizedString(@"ok");
     AlertActionModel *cancelModel = [[AlertActionModel alloc] init];
     cancelModel.title = LocalizedString(@"cancel");
-    [[AlertActionManager shareAlertActionManager] showWithMessage:LocalizedString(@"are_you_sure_to_block_the_microphone") actions:@[ cancelModel, alertModel ]];
+    [[AlertActionManager shareAlertActionManager] showWithMessage:LocalizedString(@"are_you_sure_to_block_the_microphone") actions:@[cancelModel, alertModel]];
     __weak __typeof(self) wself = self;
     alertModel.alertModelClickBlock = ^(UIAlertAction *_Nonnull action) {
         if ([action.title isEqualToString:LocalizedString(@"ok")]) {
@@ -191,7 +191,5 @@
         }
     };
 }
-
-
 
 @end

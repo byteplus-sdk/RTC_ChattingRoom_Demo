@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatSelectBgItemView.h"
 
@@ -21,17 +21,17 @@
         _index = index;
         self.layer.masksToBounds = YES;
         self.layer.cornerRadius = 2;
-        
+
         [self addSubview:self.bgImageView];
         [self.bgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
         }];
-        
+
         [self addSubview:self.selectImageView];
         [self.selectImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
         }];
-        
+
         self.bgImageView.image = [UIImage imageNamed:[self getBackgroundSmallImageName] bundleName:HomeBundleName];
         self.isSelected = NO;
     }
@@ -40,10 +40,10 @@
 
 - (void)setIsSelected:(BOOL)isSelected {
     _isSelected = isSelected;
-    
+
     if (isSelected) {
         self.selectImageView.hidden = NO;
-        
+
     } else {
         self.selectImageView.hidden = YES;
     }

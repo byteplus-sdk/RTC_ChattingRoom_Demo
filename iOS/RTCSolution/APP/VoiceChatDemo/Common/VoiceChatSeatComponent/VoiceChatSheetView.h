@@ -1,11 +1,11 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
-#import <UIKit/UIKit.h>
-#import "VoiceChatSeatItemButton.h"
 #import "VoiceChatRTSManager.h"
+#import "VoiceChatSeatItemButton.h"
+#import <UIKit/UIKit.h>
 @class VoiceChatSheetView;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface VoiceChatSheetView : UIView
 
-@property (nonatomic, weak) id <VoiceChatSheetViewDelegate> delegate;
+@property (nonatomic, weak) id<VoiceChatSheetViewDelegate> delegate;
 
 - (void)showWithSeatModel:(VoiceChatSeatModel *)seatModel
            loginUserModel:(VoiceChatUserModel *)loginUserModel;

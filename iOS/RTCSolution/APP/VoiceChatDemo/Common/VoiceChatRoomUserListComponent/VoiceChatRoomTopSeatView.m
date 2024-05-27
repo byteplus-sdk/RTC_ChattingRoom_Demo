@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomTopSeatView.h"
 
@@ -13,7 +13,6 @@
 
 @end
 
-
 @implementation VoiceChatRoomTopSeatView
 
 - (instancetype)init {
@@ -21,21 +20,21 @@
     if (self) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSeatSwitch:) name:NotificationUpdateSeatSwitch object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resultSeatSwitch) name:NotificationResultSeatSwitch object:nil];
-        
+
         self.backgroundColor = [UIColor colorFromRGBHexString:@"#0E0825" andAlpha:0.95 * 255];
-        
+
         [self addSubview:self.messageLabel];
         [self.messageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
             make.left.mas_equalTo(16);
         }];
-        
+
         [self addSubview:self.switchView];
         [self.switchView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
             make.left.equalTo(self.messageLabel.mas_right).offset(13);
         }];
-        
+
         [self addSubview:self.lineView];
         [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.equalTo(self);

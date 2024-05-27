@@ -1,10 +1,10 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
-#import <Foundation/Foundation.h>
 #import "VoiceChatSheetView.h"
+#import <Foundation/Foundation.h>
 @class VoiceChatSeatComponent;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -12,8 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol VoiceChatSeatDelegate <NSObject>
 
 - (void)voiceChatSeatComponent:(VoiceChatSeatComponent *)voiceChatSeatComponent
-                    clickButton:(VoiceChatSeatModel *)seatModel
-                    sheetStatus:(VoiceChatSheetStatus)sheetStatus;
+                   clickButton:(VoiceChatSeatModel *)seatModel
+                   sheetStatus:(VoiceChatSheetStatus)sheetStatus;
 
 @end
 

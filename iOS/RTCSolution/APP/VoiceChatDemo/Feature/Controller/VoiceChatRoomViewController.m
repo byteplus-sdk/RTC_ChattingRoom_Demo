@@ -1,20 +1,20 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomViewController.h"
 #import "ToolKit.h"
-#import "VoiceChatRoomViewController+SocketControl.h"
-#import "VoiceChatStaticView.h"
 #import "VoiceChatHostAvatarView.h"
-#import "VoiceChatRoomBottomView.h"
-#import "VoiceChatPeopleNumView.h"
-#import "VoiceChatSeatComponent.h"
 #import "VoiceChatMusicComponent.h"
-#import "VoiceChatTextInputComponent.h"
-#import "VoiceChatRoomUserListComponent.h"
+#import "VoiceChatPeopleNumView.h"
 #import "VoiceChatRTCManager.h"
+#import "VoiceChatRoomBottomView.h"
+#import "VoiceChatRoomUserListComponent.h"
+#import "VoiceChatRoomViewController+SocketControl.h"
+#import "VoiceChatSeatComponent.h"
+#import "VoiceChatStaticView.h"
+#import "VoiceChatTextInputComponent.h"
 
 @interface VoiceChatRoomViewController () <VoiceChatRoomBottomViewDelegate, VoiceChatRTCManagerDelegate, VoiceChatSeatDelegate>
 // Display static data View
@@ -149,7 +149,7 @@
     }
     // Display local IM messages
     BaseIMModel *model = [[BaseIMModel alloc] init];
-    NSString *message = [NSString stringWithFormat:LocalizedString(@"%@_has_been_on_the_mic_message"),userModel.name];
+    NSString *message = [NSString stringWithFormat:LocalizedString(@"%@_has_been_on_the_mic_message"), userModel.name];
     model.message = message;
     model.backgroundColor = [UIColor colorFromRGBHexString:@"#FFFFFF" andAlpha:0.1 * 255];
     [self.imComponent addIM:model];
@@ -175,7 +175,7 @@
     }
     // Display local IM messages
     BaseIMModel *model = [[BaseIMModel alloc] init];
-    NSString *message = [NSString stringWithFormat:LocalizedString(@"%@_has_dropped_the_mic_message"),userModel.name];
+    NSString *message = [NSString stringWithFormat:LocalizedString(@"%@_has_dropped_the_mic_message"), userModel.name];
     model.message = message;
     model.backgroundColor = [UIColor colorFromRGBHexString:@"#FFFFFF" andAlpha:0.1 * 255];
     [self.imComponent addIM:model];
@@ -219,8 +219,8 @@
     if (![userModel.uid isEqualToString:[LocalUserComponent userModel].uid]) {
         BaseIMModel *model = [[BaseIMModel alloc] init];
         NSString *imMessage = [NSString stringWithFormat:@"%@：%@",
-                               userModel.name,
-                               message];
+                                                         userModel.name,
+                                                         message];
         model.message = imMessage;
         model.backgroundColor = [UIColor colorFromRGBHexString:@"#FFFFFF" andAlpha:0.1 * 255];
         [self.imComponent addIM:model];
@@ -236,12 +236,12 @@
     cancelModel.title = LocalizedString(@"decline");
     [[AlertActionManager shareAlertActionManager] showWithMessage:LocalizedString(@"anchor_invites_you_to_the_mic") actions:@[cancelModel, alertModel]];
     __weak __typeof(self) wself = self;
-    alertModel.alertModelClickBlock = ^(UIAlertAction * _Nonnull action) {
+    alertModel.alertModelClickBlock = ^(UIAlertAction *_Nonnull action) {
         if ([action.title isEqualToString:LocalizedString(@"accept")]) {
             [wself loadDataWithReplyInvite:1];
         }
     };
-    cancelModel.alertModelClickBlock = ^(UIAlertAction * _Nonnull action) {
+    cancelModel.alertModelClickBlock = ^(UIAlertAction *_Nonnull action) {
         if ([action.title isEqualToString:LocalizedString(@"decline")]) {
             [wself loadDataWithReplyInvite:2];
         }
@@ -272,9 +272,9 @@
     // Received a message to operate the microphone
     [VoiceChatRTSManager updateMediaStatus:self.roomModel.roomID
                                        mic:mic
-                                     block:^(RTSACKModel * _Nonnull model) {
-        
-    }];
+                                     block:^(RTSACKModel *_Nonnull model){
+
+                                     }];
     if (mic == 1) {
         [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"anchor_has_unmuted_you")];
     } else {
@@ -309,37 +309,37 @@
     __weak __typeof(self) wself = self;
     [VoiceChatRTSManager joinLiveRoom:self.roomModel.roomID
                              userName:[LocalUserComponent userModel].name
-                                block:^(NSString * _Nonnull RTCToken,
-                                        VoiceChatRoomModel * _Nonnull roomModel,
-                                        VoiceChatUserModel * _Nonnull userModel,
-                                        VoiceChatUserModel * _Nonnull hostUserModel,
-                                        NSArray<VoiceChatSeatModel *> * _Nonnull seatList,
-                                        RTSACKModel * _Nonnull model) {
-        [[ToastComponent shareToastComponent] dismiss];
-        if (NOEmptyStr(roomModel.roomID)) {
-            // Join RTC room
-            [wself joinRTCRoomViewWithData:RTCToken
-                                 roomModel:roomModel
-                                 userModel:userModel
-                             hostUserModel:hostUserModel
-                                  seatList:seatList];
-        } else {
-            AlertActionModel *alertModel = [[AlertActionModel alloc] init];
-            alertModel.title = LocalizedString(@"ok");
-            alertModel.alertModelClickBlock = ^(UIAlertAction * _Nonnull action) {
-                if ([action.title isEqualToString:LocalizedString(@"ok")]) {
-                    [wself hangUp:NO];
-                }
-            };
-            [[AlertActionManager shareAlertActionManager] showWithMessage:LocalizedString(@"joining_room_failed") actions:@[alertModel]];
-        }
-    }];
+                                block:^(NSString *_Nonnull RTCToken,
+                                        VoiceChatRoomModel *_Nonnull roomModel,
+                                        VoiceChatUserModel *_Nonnull userModel,
+                                        VoiceChatUserModel *_Nonnull hostUserModel,
+                                        NSArray<VoiceChatSeatModel *> *_Nonnull seatList,
+                                        RTSACKModel *_Nonnull model) {
+                                    [[ToastComponent shareToastComponent] dismiss];
+                                    if (NOEmptyStr(roomModel.roomID)) {
+                                        // Join RTC room
+                                        [wself joinRTCRoomViewWithData:RTCToken
+                                                             roomModel:roomModel
+                                                             userModel:userModel
+                                                         hostUserModel:hostUserModel
+                                                              seatList:seatList];
+                                    } else {
+                                        AlertActionModel *alertModel = [[AlertActionModel alloc] init];
+                                        alertModel.title = LocalizedString(@"ok");
+                                        alertModel.alertModelClickBlock = ^(UIAlertAction *_Nonnull action) {
+                                            if ([action.title isEqualToString:LocalizedString(@"ok")]) {
+                                                [wself hangUp:NO];
+                                            }
+                                        };
+                                        [[AlertActionManager shareAlertActionManager] showWithMessage:LocalizedString(@"joining_room_failed") actions:@[alertModel]];
+                                    }
+                                }];
 }
 
 - (void)reconnectVoiceChatRoom {
     // Resume data request. After disconnecting and reconnecting successfully, the data needs to be restored.
     __weak __typeof(self) wself = self;
-    [VoiceChatRTSManager reconnectWithBlock:^(NSString * _Nonnull RTCToken, VoiceChatRoomModel * _Nonnull roomModel, VoiceChatUserModel * _Nonnull userModel, VoiceChatUserModel * _Nonnull hostUserModel, NSArray<VoiceChatSeatModel *> * _Nonnull seatList, RTSACKModel * _Nonnull model) {
+    [VoiceChatRTSManager reconnectWithBlock:^(NSString *_Nonnull RTCToken, VoiceChatRoomModel *_Nonnull roomModel, VoiceChatUserModel *_Nonnull userModel, VoiceChatUserModel *_Nonnull hostUserModel, NSArray<VoiceChatSeatModel *> *_Nonnull seatList, RTSACKModel *_Nonnull model) {
         if (model.result) {
             [self joinRTCRoomViewWithData:RTCToken
                                 roomModel:roomModel
@@ -359,12 +359,12 @@
 - (void)loadDataWithReplyInvite:(NSInteger)type {
     // Reply to invite request
     [VoiceChatRTSManager replyInvite:self.roomModel.roomID
-                                      reply:type
-                                      block:^(RTSACKModel * _Nonnull model) {
-        if (!model.result) {
-            [[ToastComponent shareToastComponent] showWithMessage:model.message];
-        }
-    }];
+                               reply:type
+                               block:^(RTSACKModel *_Nonnull model) {
+                                   if (!model.result) {
+                                       [[ToastComponent shareToastComponent] showWithMessage:model.message];
+                                   }
+                               }];
 }
 
 #pragma mark - VoiceChatRoomBottomViewDelegate
@@ -375,25 +375,24 @@
     if (status == VoiceChatRoomBottomStatusInput) {
         [self.textInputComponent showWithRoomModel:self.roomModel];
         __weak __typeof(self) wself = self;
-        self.textInputComponent.clickSenderBlock = ^(NSString * _Nonnull text) {
+        self.textInputComponent.clickSenderBlock = ^(NSString *_Nonnull text) {
             BaseIMModel *model = [[BaseIMModel alloc] init];
             NSString *message = [NSString stringWithFormat:@"%@：%@",
-                                 [LocalUserComponent userModel].name,
-                                 text];
+                                                           [LocalUserComponent userModel].name,
+                                                           text];
             model.message = message;
             model.backgroundColor = [UIColor colorFromRGBHexString:@"#FFFFFF" andAlpha:0.1 * 255];
             [wself.imComponent addIM:model];
         };
     } else if (status == VoiceChatRoomBottomStatusPhone) {
         [self.userListComponent showRoomModel:self.roomModel
-                                        seatID:@"-1"
-                                  dismissBlock:^{
-            
-        }];
+                                       seatID:@"-1"
+                                 dismissBlock:^{
+
+                                 }];
     } else if (status == VoiceChatRoomBottomStatusMusic) {
         [self.musicComponent show];
     } else if (status == VoiceChatRoomBottomStatusLocalMic) {
-        
     } else {
         if ([self isHost]) {
             [self showEndView];
@@ -406,14 +405,14 @@
 #pragma mark - VoiceChatSeatDelegate
 
 - (void)voiceChatSeatComponent:(VoiceChatSeatComponent *)voiceChatSeatComponent
-                    clickButton:(VoiceChatSeatModel *)seatModel
-                    sheetStatus:(VoiceChatSheetStatus)sheetStatus {
+                   clickButton:(VoiceChatSeatModel *)seatModel
+                   sheetStatus:(VoiceChatSheetStatus)sheetStatus {
     if (sheetStatus == VoiceChatSheetStatusInvite) {
         [self.userListComponent showRoomModel:self.roomModel
-                                        seatID:[NSString stringWithFormat:@"%ld", (long)seatModel.index]
-                                  dismissBlock:^{
-            
-        }];
+                                       seatID:[NSString stringWithFormat:@"%ld", (long)seatModel.index]
+                                 dismissBlock:^{
+
+                                 }];
     }
 }
 
@@ -494,14 +493,14 @@
     [self.staticView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.view);
     }];
-    
+
     [self.view addSubview:self.hostAvatarView];
     [self.hostAvatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(74, 95));
         make.centerX.equalTo(self.view);
         make.top.mas_equalTo([DeviceInforTool getStatusBarHight] + 69);
     }];
-    
+
     [self.view addSubview:self.bottomView];
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo([DeviceInforTool getVirtualHomeHeight] + 36 + 32);
@@ -509,7 +508,7 @@
         make.right.equalTo(self.view).offset(-16);
         make.bottom.equalTo(self.view);
     }];
-    
+
     [self imComponent];
     [self textInputComponent];
 }
@@ -526,7 +525,7 @@
     AlertActionModel *alertCancelModel = [[AlertActionModel alloc] init];
     alertCancelModel.title = LocalizedString(@"cancel");
     NSString *message = LocalizedString(@"are_you_sure_to_end_the_voice_chatroom");
-    [[AlertActionManager shareAlertActionManager] showWithMessage:message actions:@[ alertCancelModel, alertModel ]];
+    [[AlertActionManager shareAlertActionManager] showWithMessage:message actions:@[alertCancelModel, alertModel]];
 }
 
 - (void)navigationControllerPop {
@@ -630,9 +629,8 @@
 
 - (void)dealloc {
     [[AlertActionManager shareAlertActionManager] dismiss:^{
-        
+
     }];
 }
-
 
 @end

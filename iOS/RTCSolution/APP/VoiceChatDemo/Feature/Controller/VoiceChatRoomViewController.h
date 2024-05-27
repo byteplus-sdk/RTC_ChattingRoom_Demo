@@ -1,10 +1,10 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
-#import <UIKit/UIKit.h>
 #import "VoiceChatRTSManager.h"
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -51,7 +51,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)receivedFinishLive:(NSInteger)type roomID:(NSString *)roomID;
 
-
 /**
  * @brief Received a message from a user make guest
  * @param userModel user model
@@ -93,7 +92,7 @@ NS_ASSUME_NONNULL_BEGIN
  * @param message message content
  */
 - (void)receivedMessageWithUser:(VoiceChatUserModel *)userModel
-                            message:(NSString *)message;
+                        message:(NSString *)message;
 
 /**
  * @brief Received the invitation to make guest
@@ -110,7 +109,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)receivedApplyInteractWithUser:(VoiceChatUserModel *)userModel
                                seatID:(NSString *)seatID;
-
 
 /**
  * @brief Received invitation result message
@@ -131,7 +129,6 @@ NS_ASSUME_NONNULL_BEGIN
  * @param uid user ID
  */
 - (void)receivedClearUserWithUid:(NSString *)uid;
-
 
 @end
 

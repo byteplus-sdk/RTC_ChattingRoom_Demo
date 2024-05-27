@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomBottomView.h"
 #import "UIView+Fillet.h"
@@ -22,20 +22,20 @@
     if (self) {
         self.clipsToBounds = NO;
         self.backgroundColor = [UIColor clearColor];
-        
+
         [self addSubview:self.contentView];
         [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.top.bottom.equalTo(self);
             make.width.mas_equalTo(0);
         }];
-        
+
         [self addSubview:self.inputButton];
         [self.inputButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(36);
             make.left.top.equalTo(self);
             make.right.equalTo(self.contentView.mas_left).offset(-18);
         }];
-        
+
         [self addSubviewAndConstraints];
     }
     return self;
@@ -51,7 +51,7 @@
     if ([self.delegate respondsToSelector:@selector(voiceChatRoomBottomView:itemButton:didSelectStatus:)]) {
         [self.delegate voiceChatRoomBottomView:self itemButton:sender didSelectStatus:sender.tagNum];
     }
-    
+
     if (sender.tagNum == VoiceChatRoomBottomStatusLocalMic) {
         BOOL isEnableMic = YES;
         if (sender.status == ButtonStatusActive) {
@@ -67,12 +67,12 @@
 
 - (void)loadDataWithMediaStatus:(BOOL)isEnable {
     [VoiceChatRTSManager updateMediaStatus:_loginUserModel.roomID
-                                              mic:isEnable ? 1 : 0
-                                            block:^(RTSACKModel * _Nonnull model) {
-        if (!model.result) {
-            [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_message")];
-        }
-    }];
+                                       mic:isEnable ? 1 : 0
+                                     block:^(RTSACKModel *_Nonnull model) {
+                                         if (!model.result) {
+                                             [[ToastComponent shareToastComponent] showWithMessage:LocalizedString(@"operation_failed_message")];
+                                         }
+                                     }];
 }
 
 - (void)addSubviewAndConstraints {
@@ -90,7 +90,7 @@
 - (void)updateBottomLists:(VoiceChatUserModel *)userModel {
     _loginUserModel = userModel;
     CGFloat itemWidth = 36;
-    
+
     NSArray *status = [self getBottomListsWithModel:userModel];
     NSNumber *number = status.firstObject;
     if (number.integerValue == VoiceChatRoomBottomStatusInput) {
@@ -101,14 +101,14 @@
     } else {
         self.inputButton.hidden = YES;
     }
-    
+
     NSMutableArray *lists = [[NSMutableArray alloc] init];
     for (int i = 0; i < self.buttonLists.count; i++) {
         VoiceChatRoomItemButton *button = self.buttonLists[i];
         if (i < status.count) {
             NSNumber *number = status[i];
             VoiceChatRoomBottomStatus bottomStatus = number.integerValue;
-            
+
             button.tagNum = bottomStatus;
             NSString *imageName = [self getImageWithStatus:bottomStatus];
             UIImage *image = [UIImage imageNamed:imageName bundleName:HomeBundleName];
@@ -121,10 +121,10 @@
             button.hidden = YES;
         }
     }
-    
+
     if (lists.count > 1) {
-        [lists mas_remakeConstraints:^(MASConstraintMaker *make) {
-                
+        [lists mas_remakeConstraints:^(MASConstraintMaker *make){
+
         }];
         [lists mas_distributeViewsAlongAxis:MASAxisTypeHorizontal withFixedItemLength:itemWidth leadSpacing:0 tailSpacing:0];
         [lists mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -140,7 +140,7 @@
             make.width.mas_equalTo(itemWidth);
         }];
     }
-    
+
     CGFloat counentWidth = (itemWidth * status.count) + ((status.count - 1) * 12);
     [self.contentView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(counentWidth);
@@ -261,7 +261,7 @@
         [_inputButton setBackgroundImage:[UIImage imageNamed:@"voicechat_input" bundleName:HomeBundleName] forState:UIControlStateNormal];
         [_inputButton addTarget:self action:@selector(inputButtonAction) forControlEvents:UIControlEventTouchUpInside];
         _inputButton.hidden = YES;
-        
+
         UILabel *label = [[UILabel alloc] init];
         [label setBackgroundColor:[UIColor clearColor]];
         [label setTextColor:[UIColor whiteColor]];

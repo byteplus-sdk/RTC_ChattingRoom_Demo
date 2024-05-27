@@ -1,13 +1,13 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomListsViewController.h"
 #import "VoiceChatCreateRoomViewController.h"
-#import "VoiceChatRoomViewController.h"
-#import "VoiceChatRoomTableView.h"
 #import "VoiceChatRTCManager.h"
+#import "VoiceChatRoomTableView.h"
+#import "VoiceChatRoomViewController.h"
 
 @interface VoiceChatRoomListsViewController () <VoiceChatRoomTableViewDelegate>
 
@@ -22,49 +22,48 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navView.backgroundColor = [UIColor clearColor];
-    
+
     [self.view addSubview:self.roomTableView];
     [self.roomTableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.equalTo(self.view);
         make.top.equalTo(self.navView.mas_bottom);
     }];
-    
+
     [self.view addSubview:self.createButton];
     [self.createButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(171, 50));
         make.centerX.equalTo(self.view);
-        make.bottom.equalTo(self.view).offset(- 48 - [DeviceInforTool getVirtualHomeHeight]);
+        make.bottom.equalTo(self.view).offset(-48 - [DeviceInforTool getVirtualHomeHeight]);
     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     self.navTitle = LocalizedString(@"voice_chat_room");
     self.navRightImage = [UIImage imageNamed:@"refresh" bundleName:HomeBundleName];
-    
+
     [self loadDataWithGetLists];
 }
 
 - (void)rightButtonAction:(BaseButton *)sender {
     [super rightButtonAction:sender];
-    
+
     [self loadDataWithGetLists];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
 }
 
 #pragma mark - load data
 
 - (void)loadDataWithGetLists {
     __weak __typeof(self) wself = self;
-    
+
     [[ToastComponent shareToastComponent] showLoading];
-    [VoiceChatRTSManager clearUser:^(RTSACKModel * _Nonnull model) {
-        [VoiceChatRTSManager getActiveLiveRoomListWithBlock:^(NSArray<VoiceChatRoomModel *> * _Nonnull roomList, RTSACKModel * _Nonnull model) {
+    [VoiceChatRTSManager clearUser:^(RTSACKModel *_Nonnull model) {
+        [VoiceChatRTSManager getActiveLiveRoomListWithBlock:^(NSArray<VoiceChatRoomModel *> *_Nonnull roomList, RTSACKModel *_Nonnull model) {
             [[ToastComponent shareToastComponent] dismiss];
             if (model.result) {
                 wself.roomTableView.dataLists = roomList;
@@ -80,7 +79,7 @@
 
 - (void)VoiceChatRoomTableView:(VoiceChatRoomTableView *)VoiceChatRoomTableView didSelectRowAtIndexPath:(VoiceChatRoomModel *)model {
     VoiceChatRoomViewController *next = [[VoiceChatRoomViewController alloc]
-                                         initWithRoomModel:model];
+        initWithRoomModel:model];
     [self.navigationController pushViewController:next animated:YES];
 }
 
@@ -100,14 +99,14 @@
         [_createButton addTarget:self action:@selector(createButtonAction) forControlEvents:UIControlEventTouchUpInside];
         _createButton.layer.cornerRadius = 25;
         _createButton.layer.masksToBounds = YES;
-        
+
         UIView *contentView = [[UIView alloc] init];
         contentView.backgroundColor = [UIColor clearColor];
         [_createButton addSubview:contentView];
         [contentView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.center.equalTo(_createButton);
         }];
-        
+
         UIImageView *iconImageView = [[UIImageView alloc] init];
         iconImageView.image = [UIImage imageNamed:@"voice_add" bundleName:HomeBundleName];
         [contentView addSubview:iconImageView];
@@ -116,7 +115,7 @@
             make.centerY.equalTo(_createButton);
             make.left.equalTo(contentView);
         }];
-        
+
         UILabel *titleLabel = [[UILabel alloc] init];
         titleLabel.text = LocalizedString(@"create_room");
         titleLabel.textColor = [UIColor whiteColor];
@@ -143,6 +142,5 @@
     [[VoiceChatRTCManager shareRtc] disconnect];
     [PublicParameterComponent clear];
 }
-
 
 @end

@@ -1,22 +1,20 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomAudienceListsView.h"
 #import "VoiceChatEmptyView.h"
 #import "VoiceChatRTSManager.h"
 
-@interface VoiceChatRoomAudienceListsView ()<UITableViewDelegate, UITableViewDataSource, VoiceChatRoomUserListtCellDelegate>
+@interface VoiceChatRoomAudienceListsView () <UITableViewDelegate, UITableViewDataSource, VoiceChatRoomUserListtCellDelegate>
 
 @property (nonatomic, strong) UITableView *roomTableView;
 @property (nonatomic, strong) VoiceChatEmptyView *emptyComponent;
 
 @end
 
-
 @implementation VoiceChatRoomAudienceListsView
-
 
 - (instancetype)init {
     self = [super init];
@@ -33,7 +31,7 @@
 
 - (void)setDataLists:(NSArray *)dataLists {
     _dataLists = dataLists;
-    
+
     [self.roomTableView reloadData];
     if (dataLists.count <= 0) {
         [self.emptyComponent show];
@@ -41,7 +39,6 @@
         [self.emptyComponent dismiss];
     }
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     VoiceChatRoomUserListtCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VoiceChatRoomUserListtCellID" forIndexPath:indexPath];
@@ -90,13 +87,13 @@
 - (VoiceChatEmptyView *)emptyComponent {
     if (!_emptyComponent) {
         _emptyComponent = [[VoiceChatEmptyView alloc] initWithView:self
-                                                                  message:LocalizedString(@"no_online_audience")];
+                                                           message:LocalizedString(@"no_online_audience")];
     }
     return _emptyComponent;
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc %@",NSStringFromClass([self class]));
+    NSLog(@"dealloc %@", NSStringFromClass([self class]));
 }
 
 @end

@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomUserListtCell.h"
 #import "VoiceChatAvatarView.h"
@@ -15,7 +15,6 @@
 @end
 
 @implementation VoiceChatRoomUserListtCell
-
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -31,7 +30,7 @@
     _model = model;
     self.nameLabel.text = model.name;
     self.avatarView.text = model.name;
-    
+
     if (model.status == UserStatusActive) {
         [self.rightButton setTitle:LocalizedString(@"already_on_mic") forState:UIControlStateNormal];
         self.rightButton.backgroundColor = [UIColor colorFromRGBHexString:@"#94C2FF"];
@@ -60,7 +59,7 @@
         make.left.mas_equalTo(16);
         make.bottom.equalTo(self.contentView);
     }];
-    
+
     [self.contentView addSubview:self.rightButton];
     [self.rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(88);
@@ -68,7 +67,7 @@
         make.right.mas_equalTo(-16);
         make.centerY.equalTo(self.avatarView);
     }];
-    
+
     [self.contentView addSubview:self.nameLabel];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.avatarView.mas_right).mas_offset(9);

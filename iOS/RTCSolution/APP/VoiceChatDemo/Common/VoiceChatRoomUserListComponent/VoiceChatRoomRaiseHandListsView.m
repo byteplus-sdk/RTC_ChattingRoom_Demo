@@ -1,13 +1,13 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatRoomRaiseHandListsView.h"
 #import "VoiceChatEmptyView.h"
 #import "VoiceChatRTSManager.h"
 
-@interface VoiceChatRoomRaiseHandListsView ()<UITableViewDelegate, UITableViewDataSource, VoiceChatRoomUserListtCellDelegate>
+@interface VoiceChatRoomRaiseHandListsView () <UITableViewDelegate, UITableViewDataSource, VoiceChatRoomUserListtCellDelegate>
 
 @property (nonatomic, strong) UITableView *roomTableView;
 @property (nonatomic, strong) VoiceChatEmptyView *emptyComponent;
@@ -31,7 +31,7 @@
 
 - (void)setDataLists:(NSArray *)dataLists {
     _dataLists = dataLists;
-    
+
     [self.roomTableView reloadData];
     if (dataLists.count == 0) {
         [[NSNotificationCenter defaultCenter] postNotificationName:KClearRedNotification object:nil];
@@ -42,7 +42,6 @@
         [self.emptyComponent dismiss];
     }
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     VoiceChatRoomUserListtCell *cell = [tableView dequeueReusableCellWithIdentifier:@"VoiceChatRoomUserListtCellID" forIndexPath:indexPath];
@@ -91,13 +90,13 @@
 - (VoiceChatEmptyView *)emptyComponent {
     if (!_emptyComponent) {
         _emptyComponent = [[VoiceChatEmptyView alloc] initWithView:self
-                                                                  message:LocalizedString(@"no_application_news")];
+                                                           message:LocalizedString(@"no_application_news")];
     }
     return _emptyComponent;
 }
 
 - (void)dealloc {
-    NSLog(@"dealloc %@",NSStringFromClass([self class]));
+    NSLog(@"dealloc %@", NSStringFromClass([self class]));
 }
 
 @end

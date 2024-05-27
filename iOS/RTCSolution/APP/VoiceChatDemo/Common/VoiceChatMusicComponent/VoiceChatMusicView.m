@@ -1,7 +1,7 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatMusicView.h"
 #import "VoiceChatRTCManager.h"
@@ -20,9 +20,7 @@
 
 @property (nonatomic, assign) BOOL musicIsOpen;
 
-
 @end
-
 
 @implementation VoiceChatMusicView
 
@@ -30,26 +28,26 @@
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor colorFromRGBHexString:@"#0E0825" andAlpha:0.95 * 255];
-        
+
         [self addSubview:self.messageLabel];
         [self.messageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(12);
             make.left.mas_equalTo(16);
         }];
-        
+
         [self addSubview:self.switchView];
         [self.switchView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.messageLabel);
             make.left.equalTo(self.messageLabel.mas_right).offset(12);
         }];
-        
+
         [self addSubview:self.lineView];
         [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.equalTo(self);
             make.height.mas_equalTo(1);
             make.top.mas_equalTo(48);
         }];
-        
+
         [self addSubview:self.musicLeftLabel];
         [self.musicLeftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.messageLabel.mas_bottom).offset(28);
@@ -68,7 +66,7 @@
             make.left.mas_equalTo(16);
             make.right.mas_equalTo(-16);
         }];
-        
+
         [self addSubview:self.vocalLeftLabel];
         [self.vocalLeftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.musicLeftLabel.mas_bottom).offset(48);
@@ -87,7 +85,7 @@
             make.left.mas_equalTo(16);
             make.right.mas_equalTo(-16);
         }];
-        
+
         _musicIsOpen = NO;
         [self enableMusicVolume:NO];
     }
@@ -226,6 +224,5 @@
     }
     return _lineView;
 }
-
 
 @end

@@ -1,17 +1,18 @@
-// 
+//
 // Copyright (c) 2023 BytePlus Pte. Ltd.
 // SPDX-License-Identifier: MIT
-// 
+//
 
 #import "VoiceChatUserModel.h"
 
 @implementation VoiceChatUserModel
 
 + (NSDictionary *)modelCustomPropertyMapper {
-    return @{@"roomID" : @"room_id",
-             @"uid" : @"user_id",
-             @"name" : @"user_name",
-             @"userRole" : @"user_role",
+    return @{
+        @"roomID": @"room_id",
+        @"uid": @"user_id",
+        @"name": @"user_name",
+        @"userRole": @"user_role",
     };
 }
 
@@ -23,6 +24,5 @@
     }
     return _isSpeak;
 }
-
 
 @end
